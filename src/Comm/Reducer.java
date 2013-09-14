@@ -1,8 +1,6 @@
 package Comm;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 import mpi.*;
 
@@ -21,6 +19,11 @@ public class Reducer {
 	private int vSize;
 	private int hPos;
 	private int vPos;
+	private int aggregateOutboundLength = 0;
+	// intermediate buffer store result after first stage;
+	private int[] aggregateOutboundBuffer;
+	// keep track of vertex index to buffer location mapping.
+	private Map<Integer, Integer> aggregateOutboundMap;
 	//private int[] hRange;
 	//private int[] vRange;
 
@@ -46,6 +49,7 @@ public class Reducer {
 	public void init2d(){
 		gatherDest = (LinkedList<Integer>[]) new LinkedList[size];
 		scatterOrigin = (LinkedList<Integer>[]) new LinkedList[size];
+		aggregateOutboundMap = new HashMap<Integer, Integer>();
 		
 		//currently only handle size is a square of an integer
 		hSize = (int)Math.sqrt((double)size);
@@ -144,11 +148,44 @@ public class Reducer {
 		}
 		
 		// add carry-over indices to the table
+		int sendBufferPointer = 0;
+		for(int i = 0; i < hSize; i++){
+			
+			int right = getRightRank(i);
+			int count = 0;
+			
+			sendDispls[i] = sendBufferPointer;
+			
+			for(int j = 0; j<vSize; j++){
+				int nRank = getNeighbourRank(right, j, 'h');
+				System.arraycopy(outboundIndices, displs[nRank], sendBuffer, sendBufferPointer, counts[nRank]);
+				sendBufferPointer += counts[nRank];
+				count += counts[nRank];
+			}
+			
+			sendCounts[i] = count;
+		}
+		
+		sendDispls[hSize] = outboundIndices.length;
 		
 	}
 	
+	
+	public void getAggregateOutboundLength(){
+		
+		Set<Integer> vSet = new HashSet<Integer>();
+		for(int i = 0; i < hSize; i++){
+			
+			int right =  getRightRank(i);
+			vSet.addAll(scatterOrigin[right]);
+			
+		}
+		
+		aggregateOutboundLength = vSet.size();
+	}
+	
 	// vertical scatter map (after horzontal scatter)
-	public void setupScatterMapV(){
+	public void setupScatterMapV(int[] sendBuffer, int[] sendCounts, int[] sendDispls){
 		
 	}
 	
