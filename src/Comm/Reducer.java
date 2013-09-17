@@ -1,5 +1,6 @@
 package Comm;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import mpi.*;
@@ -10,6 +11,8 @@ public class Reducer {
 	public int rank;
 	public int size;
 	
+	public int[] hostIndices;
+	
 	// routing table for 1d, 2d case, maybe thinking to change it to hashmap
 	private LinkedList<Integer> [] gatherDest;
 	private LinkedList<Integer> [] scatterOrigin;
@@ -19,14 +22,22 @@ public class Reducer {
 	private int vSize;
 	private int hPos;
 	private int vPos;
-	private int aggregateOutboundLength = 0;
+	private int internalBufferLength = 0;
 	// intermediate buffer store result after first stage;
-	private int[] aggregateOutboundBuffer;
+	private int[] internalBuffer;
 	// keep track of vertex index to buffer location mapping.
-	private Map<Integer, Integer> aggregateOutboundMap;
+	private Map<Integer, Integer> internalBufferMap;
 	//private int[] hRange;
 	//private int[] vRange;
+	
+	// keep track of scatter buffer arrangement
+	private int[] countsH;
+	private int[] countsV;
+	private int[] displsH;
+	private int[] displsV;
 
+	// model parameter
+	private int modelSize;
 
 	// performance measure
 	private int byteCount = 0;
@@ -39,17 +50,23 @@ public class Reducer {
 		MPI.Init(args);
 		rank = MPI.COMM_WORLD.Rank();
 		size = MPI.COMM_WORLD.Size();
+		modelSize = Integer.parseInt(args[0]);
 	}
 	
 	public void init(){
 		gatherDest = (LinkedList<Integer>[]) new LinkedList[size];
 		scatterOrigin = (LinkedList<Integer>[]) new LinkedList[size];
+		
+		setHostIndices();
 	}
 	
 	public void init2d(){
 		gatherDest = (LinkedList<Integer>[]) new LinkedList[size];
 		scatterOrigin = (LinkedList<Integer>[]) new LinkedList[size];
-		aggregateOutboundMap = new HashMap<Integer, Integer>();
+		
+		setHostIndices();
+		
+		internalBufferMap = new HashMap<Integer, Integer>();
 		
 		//currently only handle size is a square of an integer
 		hSize = (int)Math.sqrt((double)size);
@@ -64,6 +81,12 @@ public class Reducer {
 		//column number
 		hPos = rank % hSize;
 		
+		countsH = new int[size];
+		displsH = new int[size+1];
+		
+		countsV = new int[size];
+		displsV = new int[size+1];
+		
 		//for(int i = 0; i < hSize; i++){
 		//	hRange[i] = h*hSize + i;
 		//}
@@ -74,20 +97,27 @@ public class Reducer {
 	}
 	
 	
-	public void config2d(int[] outboundIndices, int[] outboundCounts, int[] outboundDispls, int[] inboundIndices, 
+	public void config2d(int[] outboundIndices, int[]hostIndices, int[] inboundIndices, 
 						int[] inboundCounts, int[] inboundDispls) throws MPIException {
 		//this is wrong!! two directions are different!!
-		scatterConfig2d(outboundIndices, outboundCounts, outboundDispls);
+		scatterConfig2d(outboundIndices, hostIndices);
 
 	}
 	
-	public void sparseAllReduce2d(int[] outboundValues, int[] outboundCounts, int[] outboundDispls, int[] inboundValues, 
+	public void sparseAllReduce2d(float[] outboundValues, float[] hostValues, int[] inboundValues, 
 			int[] inboundCounts, int[] inboundDispls) throws MPIException {
-		scatter2d(outboundValues, outboundCounts, outboundDispls);
+		scatter2d(outboundValues, hostValues);
 	}
 	
 	public int getHostRank(int index){
 		return index/size;
+	}
+	
+	public void setHostIndices(){
+		int hostSize = (modelSize+size)/size;
+		for(int i = 0; i < hostSize; i++){
+			hostIndices[i] = rank*hostSize + 1;
+		}
 	}
 	
 	public int getRightRank(int i){
@@ -120,11 +150,8 @@ public class Reducer {
 		return -1;
 	}
 	
-	// horizontal scatter map (assuming outboundIndices are sorted according to host rank)
+	// horizontal scatter map (assuming outboundIndices are sorted according to host rank) 
 	public void setupScatterMapH(int[] outboundIndices, int[] sendBuffer, int[] sendCounts, int[] sendDispls){
-		
-		int[] counts = new int[size];
-		int[] displs = new int[size+1];
 		
 		int lRank = -1;
 		int cRank = 0;
@@ -133,18 +160,18 @@ public class Reducer {
 			cRank = getHostRank( outboundIndices[i] );
 			if( lRank != cRank ){
 				for( int j = lRank+1; j <= cRank; j++ ){
-					displs[j] = i;
+					displsH[j] = i;
 				}
 			}
 			lRank = cRank;
 		}
 		
 		for( int i = lRank+1; i <= size; i++){
-			displs[i] = outboundIndices.length;
+			displsH[i] = outboundIndices.length;
 		}
 		
 		for( int i = 0; i < size; i++){
-			counts[i] = displs[i+1] - displs[i];
+			countsH[i] = displsH[i+1] - displsH[i];
 		}
 		
 		// add carry-over indices to the table
@@ -158,9 +185,9 @@ public class Reducer {
 			
 			for(int j = 0; j<vSize; j++){
 				int nRank = getNeighbourRank(right, j, 'h');
-				System.arraycopy(outboundIndices, displs[nRank], sendBuffer, sendBufferPointer, counts[nRank]);
-				sendBufferPointer += counts[nRank];
-				count += counts[nRank];
+				System.arraycopy(outboundIndices, displsH[nRank], sendBuffer, sendBufferPointer, countsH[nRank]);
+				sendBufferPointer += countsH[nRank];
+				count += countsH[nRank];
 			}
 			
 			sendCounts[i] = count;
@@ -170,8 +197,8 @@ public class Reducer {
 		
 	}
 	
-	
-	public void getAggregateOutboundLength(){
+	// add host index to the set !!
+	public void setinternalBufferLength(){
 		
 		Set<Integer> vSet = new HashSet<Integer>();
 		for(int i = 0; i < hSize; i++){
@@ -181,11 +208,90 @@ public class Reducer {
 			
 		}
 		
-		aggregateOutboundLength = vSet.size();
+		// add host set
+		for( int i : hostIndices){
+			vSet.add(i);
+		}
+		
+		internalBufferLength = vSet.size();
+		
+		internalBuffer = new int[internalBufferLength];
+		
 	}
 	
-	// vertical scatter map (after horzontal scatter)
+	// vertical scatter map (after horzontal scatter) add host index to the set !!
 	public void setupScatterMapV(int[] sendBuffer, int[] sendCounts, int[] sendDispls){
+		
+		Set<Integer> vSet = new HashSet<Integer>();
+		for(int i = 0; i < hSize; i++){
+			
+			int right =  getRightRank(i);
+			vSet.addAll(scatterOrigin[right]);
+			
+		}
+		for( int i : hostIndices){
+			vSet.add(i);
+		}
+		
+		int[] outboundIndices = new int[internalBufferLength];
+		
+		int k = 0;
+		for( Integer i : vSet){
+			outboundIndices[k] = i;
+			k++;
+		}
+
+		Arrays.sort(outboundIndices);
+		
+		// build vertex-index map
+		
+		for( int i = 0; i<outboundIndices.length; i++){
+			internalBufferMap.put(outboundIndices[i], i);
+		}
+		
+		// allocate host nodes, should be no vertex assigned to other than vertical group according the pre-selection
+		
+		int lRank = -1;
+		int cRank = 0;
+
+		for( int i = 0; i < outboundIndices.length; i++ ){
+			cRank = getHostRank( outboundIndices[i] );
+			if( lRank != cRank ){
+				for( int j = lRank+1; j <= cRank; j++ ){
+					displsV[j] = i;
+				}
+			}
+			lRank = cRank;
+		}
+		
+		for( int i = lRank+1; i <= size; i++){
+			displsV[i] = outboundIndices.length;
+		}
+		
+		for( int i = 0; i < size; i++){
+			countsH[i] = displsV[i+1] - displsV[i];
+		}
+		
+		// 
+		int sendBufferPointer = 0;
+		for(int i = 0; i < hSize; i++){
+			
+			int down = getDownRank(i);
+			int count = 0;
+			
+			sendDispls[i] = sendBufferPointer;
+			
+			for(int j = 0; j<vSize; j++){
+				System.arraycopy(outboundIndices, displsV[down], sendBuffer, sendBufferPointer, countsV[down]);
+				sendBufferPointer += countsV[down];
+				count += countsV[down];
+			}
+			
+			sendCounts[i] = count;
+		}
+		
+		sendDispls[vSize] = outboundIndices.length;
+		
 		
 	}
 	
@@ -215,23 +321,27 @@ public class Reducer {
 		
 	}
 	
-	public void scatterConfig2d(int[] outboundIndices) throws MPIException{
+	public void scatterConfig2d(int[] outboundIndices, int[] hostIndices) throws MPIException{
 		
 		int[] sendBufferH = new int[outboundIndices.length];
 		int[] sendCountsH = new int[hSize];
-		int[] sendDisplsH = new int[hSize + 1];
+		int[] sendDisplsH = new int[hSize+1];
 		
 		setupScatterMapH(outboundIndices, sendBufferH, sendCountsH, sendDisplsH);
 		scatterConfig(sendBufferH, sendCountsH, sendDisplsH, 'h');
 		
 		
-		int[] sendBufferV = new int[outboundIndices.length];
-		int[] sendCountsV = new int[vSize];
-		int[] sendDisplsV = new int[vSize + 1];
-		setupScatterMapV(outboundIndices, sendBufferV, sendCountsV, sendDisplsV);
+		setinternalBufferLength();
+		
+		int[] sendBufferV = new int[internalBufferLength];
+		int[] sendCountsV = new int[hSize];
+		int[] sendDisplsV = new int[hSize+1];
+		
+		setupScatterMapV(sendBufferV, sendCountsV, sendDisplsV);
 		scatterConfig(sendBufferV, sendCountsV, sendDisplsV, 'v');
 	}
 	
+	/*
 	public void scatterConfig2d(int[] outboundIndices, int[] outboundCounts, int[] outboundDispls) throws MPIException{
 		
 		int [] sendCounts = new int[size];
@@ -286,15 +396,137 @@ public class Reducer {
 		}
 	}
 	
+	*/
 	
-	public void scatter2d(int[] outboundValues, int[] outboundCounts, int[] outboundDispls){
+	public void scatter(float [] sendBuffer, int [] sendCounts, int [] sendDispls, char orient) throws MPIException{
+
+		float [] buffer;
+		
+		for(int i = 0; i < size; i++){
+			
+			int right =  (orient == 'h') ? getRightRank(i) : getDownRank(i);
+			int left = (orient == 'h') ? getLeftRank(i) : getUpRank(i);
+			
+			int bufferCount = scatterOrigin[left].size();
+			buffer = new float[bufferCount];
+			
+			MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[right], sendCounts[right], MPI.FLOAT, right, 0, buffer, 0, bufferCount, MPI.FLOAT, left, 0);
+			
+			/*
+			Iterator<Integer> itr = scatterOrigin[left].iterator();
+			int j = 0;
+			while(itr.hasNext()){
+				int next = itr.next();
+				int k = (next % dim_per_proc);
+				recvbuf[k] += buffer[j];
+				j++;
+			}*/
+			
+			int j = 0;
+			for( float val : scatterOrigin[left]){
+				internalBuffer[internalBufferMap.get(val)] += buffer[j];
+				j++;
+			}
+		}
+	}
+	public void scatter2d(float[] outboundValues, float[] hostValues)throws MPIException{
+		
+		float[] sendBufferH = new float[outboundValues.length];
+		int[] sendCountsH = new int[hSize];
+		int[] sendDisplsH = new int[hSize+1];
+		
+		int sendBufferPointerH = 0;
+		for(int i = 0; i < hSize; i++){
+			
+			int down = getDownRank(i);
+			int count = 0;
+			
+			sendDisplsH[i] = sendBufferPointerH;
+			
+			for(int j = 0; j<vSize; j++){
+				System.arraycopy(outboundValues, displsV[down], sendBufferH, sendBufferPointerH, countsV[down]);
+				sendBufferPointerH += countsV[down];
+				count += countsV[down];
+			}
+			
+			sendCountsH[i] = count;
+		}
+		
+		scatter(sendBufferH, sendCountsH, sendDisplsH, 'h');
+
+		
+		float[] sendBufferV = new float[internalBufferLength];
+		int[] sendCountsV = new int[hSize];
+		int[] sendDisplsV = new int[hSize+1];
+		
+		int sendBufferPointerV = 0;
+		for(int i = 0; i < hSize; i++){
+			
+			int down = getDownRank(i);
+			int count = 0;
+			
+			sendDisplsV[i] = sendBufferPointerV;
+			
+			for(int j = 0; j<vSize; j++){
+				System.arraycopy(internalBuffer, displsV[down], sendBufferV, sendBufferPointerV, countsV[down]);
+				sendBufferPointerV += countsV[down];
+				count += countsV[down];
+			}
+			
+			sendCountsV[i] = count;
+		}
+		
+		sendDisplsV[vSize] = outboundValues.length;
+		
+		scatter(sendBufferV, sendCountsV, sendDisplsV, 'v');
 		
 	}
 	
 	
-	public void gatherConfig2d(int[] inboundIndices, int[] inbound_counts, int[] inbound_displs){
+	// the basic scatter config element
+		public void gatherConfig(int[] sendBuffer, int[] sendCounts, int[] sendDispls, char orient) throws MPIException{
+			
+			int [] recvCounts = new int[size];
+			int [] recvBuffer;
+			
+			for(int i = 0; i < hSize; i++){
+				
+				int right =  (orient == 'h') ? getRightRank(i) : getDownRank(i);
+				int left = (orient == 'h') ? getLeftRank(i) : getUpRank(i);
+				
+				MPI.COMM_WORLD.Sendrecv(sendCounts, i, 1, MPI.INT, right, 0, recvCounts, left, 1, MPI.INT, left, 0);
+					
+				recvBuffer = new int[recvCounts[left]];
+				
+				MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.INT, right, 0, recvBuffer, 0, recvCounts[left], MPI.INT, left, 0);
+			
+				gatherDest[left] = new LinkedList<Integer>();
+				for(int j = 0; j<recvCounts[left]; j++){
+					gatherDest[left].add(recvBuffer[j]);
+				}
+			}
+			
+		}
 		
-	}
+		public void gatherConfig2d(int[] outboundIndices, int[] hostIndices) throws MPIException{
+			
+			int[] sendBufferH = new int[outboundIndices.length];
+			int[] sendCountsH = new int[hSize];
+			int[] sendDisplsH = new int[hSize+1];
+			
+			setupScatterMapH(outboundIndices, sendBufferH, sendCountsH, sendDisplsH);
+			scatterConfig(sendBufferH, sendCountsH, sendDisplsH, 'h');
+			
+			
+			setinternalBufferLength();
+			
+			int[] sendBufferV = new int[internalBufferLength];
+			int[] sendCountsV = new int[hSize];
+			int[] sendDisplsV = new int[hSize+1];
+			
+			setupScatterMapV(sendBufferV, sendCountsV, sendDisplsV);
+			scatterConfig(sendBufferV, sendCountsV, sendDisplsV, 'v');
+		}
 	
 	public void gather2dh(){
 		
