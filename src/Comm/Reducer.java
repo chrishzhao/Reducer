@@ -142,6 +142,7 @@ public class Reducer {
 	// return the set of vertex indices (in an array) the current machine host
 	public void setHostIndices(){
 		int hostSize = (modelSize+size-1)/size;
+		hostVertexIndices = new int[hostSize];
 		for(int i = 0; i < hostSize; i++){
 			hostVertexIndices[i] = rank*hostSize + i;
 		}
