@@ -285,6 +285,9 @@ public class Reducer {
 		
 		for( int i = 0; i<outboundIndices.length; i++){
 			internalScatterBufferMap.put(outboundIndices[i], i);
+			//if(rank==0){
+			//	System.out.println(String.format("%d, %d", outboundIndices[i], i));
+			//}
 		}
 		
 		// tag boundaries of outboundIndices
@@ -339,11 +342,11 @@ public class Reducer {
 			
 			int right =  (orient == 'h') ? getRightRank(i) : getDownRank(i);
 			int left = (orient == 'h') ? getLeftRank(i) : getUpRank(i);
-			
 			MPI.COMM_WORLD.Sendrecv(sendCounts, i, 1, MPI.INT, right, 0, recvCounts, left, 1, MPI.INT, left, 0);
 				
 			recvBuffer = new int[recvCounts[left]];
 			
+		        System.out.println(String.format("rank: %d i: %d orient: %c right: %d left %d len: %d displs: %d counts: %d, %d", rank, i, orient, right, left, sendBuffer.length, sendDispls[i], sendCounts[i], recvCounts[left]));	
 			MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.INT, right, 0, recvBuffer, 0, recvCounts[left], MPI.INT, left, 0);
 		
 			scatterOrigin[left] = new LinkedList<Integer>();
@@ -373,18 +376,25 @@ public class Reducer {
 		int[] sendCountsV = new int[vSize];
 		int[] sendDisplsV = new int[vSize+1];
 		
+		if(rank == 0){System.out.println(String.format("scatterLength: %d",scatterLength));}
 		setupScatterMapV(sendBufferV, sendCountsV, sendDisplsV);
 		scatterConfig(sendBufferV, sendCountsV, sendDisplsV, 'v');
 		
-		hostIndices = hostVertexIndices.clone();
+		//hostIndices = hostVertexIndices.clone();
+		int k = 0;
+		for( int v : hostVertexIndices){
+			hostIndices[k++] = v;
+		}
 	}
 	
 	// basic element of scatter
 	public void scatter(float [] sendBuffer, int [] sendCounts, int [] sendDispls, char orient) throws MPIException{
 
 		float [] buffer;
+
+		int iSize = (orient == 'h') ? hSize : vSize;
 		
-		for(int i = 0; i < size; i++){
+		for(int i = 0; i < iSize; i++){
 			
 			int right =  (orient == 'h') ? getRightRank(i) : getDownRank(i);
 			int left = (orient == 'h') ? getLeftRank(i) : getUpRank(i);
@@ -392,7 +402,8 @@ public class Reducer {
 			int bufferCount = scatterOrigin[left].size();
 			buffer = new float[bufferCount];
 			
-			MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[right], sendCounts[right], MPI.FLOAT, right, 0, buffer, 0, bufferCount, MPI.FLOAT, left, 0);
+			//System.out.println(String.format("rank: %d, right: %d, left: %d, i:%d, len: %d, sendDispl: %d, sendCount: %d ", rank, right, left, i, sendBuffer.length, sendDispls[i], sendCounts[i]));
+			MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.FLOAT, right, 0, buffer, 0, bufferCount, MPI.FLOAT, left, 0);
 			
 			/*
 			Iterator<Integer> itr = scatterOrigin[left].iterator();
@@ -405,9 +416,9 @@ public class Reducer {
 			}*/
 			
 			// avoid duplicate addition from itself.
-			if( i != 0 || orient != 'v'){
+			if( (i != 0) || (orient != 'v')){
 				int j = 0;
-				for( float val : scatterOrigin[left]){
+				for( int val : scatterOrigin[left]){
 					internalScatterBuffer[internalScatterBufferMap.get(val)] += buffer[j];
 					j++;
 				}
@@ -432,9 +443,9 @@ public class Reducer {
 			
 			for(int j = 0; j<vSize; j++){
 				int nRank = getNeighbourRank(right, j, 'h');
-				System.arraycopy(outboundValues, sdisplsV[nRank], sendBufferH, sendBufferPointerH, scountsV[nRank]);
-				sendBufferPointerH += scountsV[nRank];
-				count += scountsV[nRank];
+				System.arraycopy(outboundValues, sdisplsH[nRank], sendBufferH, sendBufferPointerH, scountsH[nRank]);
+				sendBufferPointerH += scountsH[nRank];
+				count += scountsH[nRank];
 			}
 			
 			sendCountsH[i] = count;
@@ -465,11 +476,10 @@ public class Reducer {
 		
 		scatter(sendBufferV, sendCountsV, sendDisplsV, 'v');
 		
-		hostValues = new float[hostVertexIndices.length];
 		
-		for( int vi : hostVertexIndices){
+		for( int v : hostVertexIndices){
 			
-			hostValues[getHostIndex(vi)] = internalScatterBuffer[internalScatterBufferMap.get(vi)];
+			hostValues[getHostIndex(v)] = internalScatterBuffer[internalScatterBufferMap.get(v)];
 		}
 		
 	}
@@ -745,5 +755,8 @@ public class Reducer {
 	}
 	
 */
+	public void terminate() throws MPIException{
+		MPI.Finalize();
+	}
 
 }
