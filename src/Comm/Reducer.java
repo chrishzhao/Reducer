@@ -73,9 +73,12 @@ public class Reducer {
 	}
 	
 	public void init2d(){
-		gatherDest = (LinkedList<Integer>[]) new LinkedList[size];
-		gatherOrigin = (LinkedList<Integer>[]) new LinkedList[size];
-		scatterOrigin = (LinkedList<Integer>[]) new LinkedList[size];
+		
+		// the (size)th list stores the vertex map for the machine its own in vertical orient
+		// the (rank)th list stores the vertex map for the machine its own in horizontal orient
+		gatherDest = (LinkedList<Integer>[]) new LinkedList[size + 1];
+		gatherOrigin = (LinkedList<Integer>[]) new LinkedList[size + 1];
+		scatterOrigin = (LinkedList<Integer>[]) new LinkedList[size + 1];
 		
 		setHostIndices();
 		
@@ -348,12 +351,31 @@ public class Reducer {
 			recvBuffer = new int[recvCounts[left]];
 			
 			MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.INT, right, 0, recvBuffer, 0, recvCounts[left], MPI.INT, left, 0);
+			
+			/*
 			if( i!=0 || orient != 'v'){	
 				scatterOrigin[left] = new LinkedList<Integer>();
 			}
 			for(int j = 0; j<recvCounts[left]; j++){
 				scatterOrigin[left].add(recvBuffer[j]);
+			}*/
+			
+			if( i!=0 ){	
+				scatterOrigin[left] = new LinkedList<Integer>();
+				
+				for(int j = 0; j<recvCounts[left]; j++){
+					scatterOrigin[left].add(recvBuffer[j]);
+				}
+			}else{
+				
+				int ii = (orient == 'h') ? left : size;
+				scatterOrigin[ii] = new LinkedList<Integer>();
+				
+				for(int j = 0; j<recvCounts[left]; j++){
+					scatterOrigin[ii].add(recvBuffer[j]);
+				}
 			}
+			
 		}
 		
 	}
@@ -400,19 +422,9 @@ public class Reducer {
 			
 			int bufferCount = scatterOrigin[left].size();
 			buffer = new float[bufferCount];
-			
+			/*
 //			if(true){System.out.println(String.format("rank: %d, right: %d, left: %d, i:%d, len: %d, sendDispl: %d, sendCount: %d, orient: %c, recvCount: %d ", rank, right, left, i, sendBuffer.length, sendDispls[i], sendCounts[i], orient, bufferCount));}
 			MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.FLOAT, right, 0, buffer, 0, bufferCount, MPI.FLOAT, left, 0);
-			
-			/*
-			Iterator<Integer> itr = scatterOrigin[left].iterator();
-			int j = 0;
-			while(itr.hasNext()){
-				int next = itr.next();
-				int k = (next % dim_per_proc);
-				recvbuf[k] += buffer[j];
-				j++;
-			}*/
 			
 			// avoid duplicate addition from itself.
 			if( (i != 0) || (orient != 'v')){
@@ -420,6 +432,22 @@ public class Reducer {
 				for( int val : scatterOrigin[left]){
 					internalScatterBuffer[internalScatterBufferMap.get(val)] += buffer[j];
 					j++;
+				}
+			}*/
+			if( i !=0 ){
+				MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.FLOAT, right, 0, buffer, 0, bufferCount, MPI.FLOAT, left, 0);
+				int j = 0;
+				for( int val : scatterOrigin[left]){
+					internalScatterBuffer[internalScatterBufferMap.get(val)] += buffer[j];
+					j++;
+				}
+			}else{
+				if( orient == 'h'){
+					int j = 0;
+					for( int val : scatterOrigin[left]){
+						internalScatterBuffer[internalScatterBufferMap.get(val)] += sendBuffer[sendDispls[i] + j];
+						j++;
+					}
 				}
 			}
 		}
@@ -481,7 +509,8 @@ public class Reducer {
 		}
 		
 	}
-	/*
+	
+	
 	// horizontal gather map (assuming outboundIndices are sorted according to host rank) 
 	public void setupGatherMapV(int[] inboundIndices, int[] sendBuffer, int[] sendCounts, int[] sendDispls){
 			
@@ -525,22 +554,24 @@ public class Reducer {
 			sendCounts[i] = count;
 		}
 			
-		sendDispls[hSize] = inboundIndices.length;
+		sendDispls[vSize] = inboundIndices.length;
 			
 	}
 		
 	// 
-	public void setGatherLength(){
+	public void setGatherLength(int[] inIndices){
 			
 		Set<Integer> vSet = new HashSet<Integer>();
 		for(int i = 0; i < vSize; i++){
 				
 			int down =  getDownRank(i);
-			vSet.addAll(gatherDest[down]);
+			vSet.addAll(gatherOrigin[down]);
 				
 		}
 			
-			
+		for( int i : inIndices){
+			vSet.add(i);
+		}
 		gatherLength = vSet.size();
 		
 		internalGatherBuffer = new float[gatherLength];
@@ -548,15 +579,19 @@ public class Reducer {
 	}
 		
 	// vertical gather map (after horzontal scatter) add host index to the set !!
-	public void setupGatherMapH(int[] sendBuffer, int[] sendCounts, int[] sendDispls){
+	public void setupGatherMapH(int[] inIndices, int[] sendBuffer, int[] sendCounts, int[] sendDispls){
 			
 		Set<Integer> vSet = new HashSet<Integer>();
-		for(int i = 0; i < hSize; i++){
+		for(int i = 0; i < vSize; i++){
 				
-			int right =  getRightRank(i);
-			vSet.addAll(gatherDest[right]);				
+			int down =  getDownRank(i);
+			vSet.addAll(gatherOrigin[down]);				
 		}
-			
+		
+		for( int i : inIndices){
+			vSet.add(i);
+		}
+		
 		int[] inboundIndices = new int[gatherLength];
 		
 		int k = 0;
@@ -599,23 +634,17 @@ public class Reducer {
 			
 			// 
 		int sendBufferPointer = 0;
-		for(int i = 0; i < vSize; i++){
+		for(int i = 0; i < hSize; i++){
 				
 			int right = getRightRank(i);
-			int count = 0;
 				
 			sendDispls[i] = sendBufferPointer;
-				
-			for(int j = 0; j<hSize; j++){
-				System.arraycopy(inboundIndices, rdisplsH[right], sendBuffer, sendBufferPointer, rcountsH[right]);
-				sendBufferPointer += rcountsH[right];
-				count += rcountsH[right];
-			}
-				
-			sendCounts[i] = count;
+			System.arraycopy(inboundIndices, rdisplsH[right], sendBuffer, sendBufferPointer, rcountsH[right]);
+			sendBufferPointer += rcountsH[right];
+			sendCounts[i] = rcountsH[right];
 		}
 			
-		sendDispls[vSize] = inboundIndices.length;
+		sendDispls[hSize] = inboundIndices.length;
 				
 	}	
 	
@@ -635,32 +664,54 @@ public class Reducer {
 			recvBuffer = new int[recvCounts[left]];
 				
 			MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.INT, right, 0, recvBuffer, 0, recvCounts[left], MPI.INT, left, 0);
-							
-			gatherDest[left] = new LinkedList<Integer>();
-			for(int j = 0; j<recvCounts[left]; j++){
-				gatherDest[left].add(recvBuffer[j]);
+			
+			if(i!=0){
+				gatherDest[left] = new LinkedList<Integer>();
+				gatherOrigin[left] = new LinkedList<Integer>();
+				
+				for(int j = 0; j<recvCounts[left]; j++){
+					gatherDest[left].add(recvBuffer[j]);
+				}
+				
+				for(int j = 0; j<sendCounts[left]; j++){
+					gatherOrigin[left].add(sendBuffer[sendDispls[i] + j]);
+				}
+			}else{
+				int ii = (orient == 'h') ? left : size;
+				gatherDest[ii] = new LinkedList<Integer>();
+				gatherOrigin[ii] = new LinkedList<Integer>();
+				
+				for(int j = 0; j<recvCounts[ii]; j++){
+					gatherDest[ii].add(recvBuffer[j]);
+				}
+				
+				for(int j = 0; j<sendCounts[left]; j++){
+					gatherOrigin[ii].add(sendBuffer[sendDispls[i] + j]);
+				}	
 			}
+			
 		}			
 	}
 		
 	public void gatherConfig2d(int[] inboundIndices) throws MPIException{
 		
-		
-		int[] sendBufferV = new int[inboundIndices.length];
+		int[] sendBufferV = new int[gatherLength];
 		int[] sendCountsV = new int[vSize];
 		int[] sendDisplsV = new int[vSize+1];
 			
 		setupGatherMapV(inboundIndices, sendBufferV, sendCountsV, sendDisplsV);
 		gatherConfig(sendBufferV, sendCountsV, sendDisplsV, 'v');
 			
-		setGatherLength();
+		setGatherLength(inboundIndices);
 		
-		int[] sendBufferH = new int[gatherLength];
+		int[] sendBufferH = new int[inboundIndices.length];
 		int[] sendCountsH = new int[hSize];
 		int[] sendDisplsH = new int[hSize+1];
 			
-		setupGatherMapH(sendBufferH, sendCountsH, sendDisplsH);
+		setupGatherMapH(inboundIndices, sendBufferH, sendCountsH, sendDisplsH);
 		gatherConfig(sendBufferH, sendCountsH, sendDisplsH, 'h');
+		
+
 				
 	}
 	
@@ -674,21 +725,31 @@ public class Reducer {
 			int right =  (orient == 'h') ? getRightRank(i) : getDownRank(i);
 			int left = (orient == 'h') ? getLeftRank(i) : getUpRank(i);
 			
-			int bufferCount = 0;
 			
-			for(int j = 0; j<hSize; j++){
-				int nRank = getNeighbourRank(right, j, 'v');
-				bufferCount += rcountsV[nRank];
-			}
+			if(i != 0){
+				int bufferCount = 0;
 			
-			recvBuffer = new float[bufferCount];
+				for(int j = 0; j<hSize; j++){
+					int nRank = getNeighbourRank(right, j, 'v');
+					bufferCount += rcountsV[nRank];
+				}
 			
-			MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[right], sendCounts[right], MPI.FLOAT, right, 0, recvBuffer, 0, bufferCount, MPI.FLOAT, left, 0);
+				recvBuffer = new float[bufferCount];
 			
-			int j = 0;
-			for( float val : gatherOrigin[left]){
-				internalGatherBuffer[internalGatherBufferMap.get(val)] = recvBuffer[j];
-				j++;
+				MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[right], sendCounts[right], MPI.FLOAT, right, 0, recvBuffer, 0, bufferCount, MPI.FLOAT, left, 0);
+			
+				int j = 0;
+				for( float val : gatherOrigin[left]){
+					internalGatherBuffer[internalGatherBufferMap.get(val)] = recvBuffer[j];
+					j++;
+				}
+			}else{
+				int j = 0;
+				int ii = (orient == 'h') ? left : size;
+				for( float val : gatherOrigin[ii]){
+					internalGatherBuffer[internalGatherBufferMap.get(val)] = sendBuffer[sendDispls[right] + j];
+					j++;
+				}
 			}
 					
 		}
@@ -697,6 +758,33 @@ public class Reducer {
 	public void gather2d(float[] hostValues, float[] inboundValues) throws MPIException {
 		
 		
+		float[] sendBufferH;
+		int[] sendCountsH = new int[hSize];
+		int[] sendDisplsH = new int[hSize + 1];
+		
+		int sendBufferHL = 0;
+		
+		for(int i = 0; i<hSize; i++){
+			int right = getRightRank(i);
+			sendBufferHL += gatherDest[right].size();
+		}
+		
+		sendBufferH = new float[sendBufferHL];
+		
+		int bufferPointerH = 0;
+		
+		for(int i = 0; i<hSize; i++){
+			int right = getRightRank(i);
+			sendDisplsH[i] = bufferPointerH;
+			for( int vid : gatherDest[right]){
+				sendBufferH[bufferPointerH] = hostValues[getHostIndex(vid)];
+				bufferPointerH += 1;
+				sendCountsH[i] += 1;
+			}
+		}
+		
+		gather(sendBufferH, sendCountsH, sendDisplsH, 'h');
+
 		float[] sendBufferV;
 		int[] sendCountsV = new int[vSize];
 		int[] sendDisplsV = new int[vSize + 1];
@@ -714,45 +802,29 @@ public class Reducer {
 		
 		for(int i = 0; i<vSize; i++){
 			int down = getDownRank(i);
+			if(down == rank){down = size;}
 			sendDisplsV[i] = bufferPointerV;
 			for( int vid : gatherDest[down]){
-				sendBufferV[bufferPointerV] = hostValues[getHostIndex(vid)];
+				sendBufferV[bufferPointerV] = internalGatherBuffer[internalGatherBufferMap.get(vid)];
 				bufferPointerV += 1;
 				sendCountsV[i] += 1;
 			}
 		}
-		
 		gather(sendBufferV, sendCountsV, sendDisplsV, 'v');
-
-		float[] sendBufferH;
-		int[] sendCountsH = new int[hSize];
-		int[] sendDisplsH = new int[hSize + 1];
 		
-		int sendBufferHL = 0;
 		
-		for(int i = 0; i<hSize; i++){
-			int right = getRightRank(i);
-			sendBufferHL += gatherDest[right].size();
-		}
-		
-		sendBufferH = new float[sendBufferHL];
-		
-		int bufferPointerH = 0;
-		
-		for(int i = 0; i<vSize; i++){
-			int right = getRightRank(i);
-			sendDisplsH[i] = bufferPointerH;
-			for( int vid : gatherDest[right]){
-				sendBufferH[bufferPointerH] = internalGatherBuffer[internalGatherBufferMap.get(vid)];
-				bufferPointerH += 1;
-				sendCountsH[i] += 1;
+		int j = 0;
+		for( int i = 0; i<vSize; i++){
+			int nRank = getNeighbourRank(rank, i, 'v');
+			if(nRank == rank){nRank = size;}
+			for( int vid : gatherOrigin[nRank]){
+				inboundValues[j++] = internalGatherBuffer[internalGatherBufferMap.get(vid)];
 			}
 		}
-		gather(sendBufferH, sendCountsH, sendDisplsH, 'h');
 		
 	}
 	
-*/
+
 	public void terminate() throws MPIException{
 		MPI.Finalize();
 	}
