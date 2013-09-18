@@ -15,13 +15,13 @@ public class TestReducer {
 		int modelSize = 160;
 		int hostSize = (modelSize + size - 1)/size;
 		
-		int[] outboundIndices = new int[hostSize*4];
-		float[] outboundValues = new float[hostSize*4];
+		int[] outboundIndices = new int[hostSize*16];
+		float[] outboundValues = new float[hostSize*16];
 		
 		int[] hostIndices = new int[hostSize];
 		float[] hostValues = new float[hostSize];
 		
-		for(int i = 0; i<hostSize*4; i++){
+		for(int i = 0; i<hostSize*16; i++){
 			
 			outboundIndices[i] = (rank*hostSize + i) % modelSize;
 			outboundValues[i] =  5 + rank;
@@ -29,12 +29,18 @@ public class TestReducer {
 		
 		Arrays.sort(outboundIndices);
 		r.init2d();
+		if(rank == 0){
+			System.out.println("start config ...");
+		}		
 		r.scatterConfig2d(outboundIndices, hostIndices);
+		if(rank == 0){
+			System.out.println("start scatter ...");
+		}
 		r.scatter2d(outboundValues, hostValues);
 		r.terminate();		
 
 
-		if(rank == 12){
+		if(rank == 7){
 			System.out.println("Indices");
 			for(int i = 0; i<hostSize; i++){
 			
