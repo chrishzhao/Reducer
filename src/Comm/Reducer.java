@@ -338,7 +338,8 @@ public class Reducer {
 		int [] recvCounts = new int[size];
 		int [] recvBuffer;
 		
-		for(int i = 0; i < hSize; i++){
+		int iSize = (orient == 'h') ? hSize : vSize;
+		for(int i = 0; i < iSize; i++){
 			
 			int right =  (orient == 'h') ? getRightRank(i) : getDownRank(i);
 			int left = (orient == 'h') ? getLeftRank(i) : getUpRank(i);
@@ -346,10 +347,10 @@ public class Reducer {
 				
 			recvBuffer = new int[recvCounts[left]];
 			
-		        System.out.println(String.format("rank: %d i: %d orient: %c right: %d left %d len: %d displs: %d counts: %d, %d", rank, i, orient, right, left, sendBuffer.length, sendDispls[i], sendCounts[i], recvCounts[left]));	
 			MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.INT, right, 0, recvBuffer, 0, recvCounts[left], MPI.INT, left, 0);
-		
-			scatterOrigin[left] = new LinkedList<Integer>();
+			if( i!=0 || orient != 'v'){	
+				scatterOrigin[left] = new LinkedList<Integer>();
+			}
 			for(int j = 0; j<recvCounts[left]; j++){
 				scatterOrigin[left].add(recvBuffer[j]);
 			}
@@ -376,10 +377,8 @@ public class Reducer {
 		int[] sendCountsV = new int[vSize];
 		int[] sendDisplsV = new int[vSize+1];
 		
-		if(rank == 0){System.out.println(String.format("scatterLength: %d",scatterLength));}
 		setupScatterMapV(sendBufferV, sendCountsV, sendDisplsV);
 		scatterConfig(sendBufferV, sendCountsV, sendDisplsV, 'v');
-		
 		//hostIndices = hostVertexIndices.clone();
 		int k = 0;
 		for( int v : hostVertexIndices){
@@ -402,7 +401,7 @@ public class Reducer {
 			int bufferCount = scatterOrigin[left].size();
 			buffer = new float[bufferCount];
 			
-			//System.out.println(String.format("rank: %d, right: %d, left: %d, i:%d, len: %d, sendDispl: %d, sendCount: %d ", rank, right, left, i, sendBuffer.length, sendDispls[i], sendCounts[i]));
+//			if(true){System.out.println(String.format("rank: %d, right: %d, left: %d, i:%d, len: %d, sendDispl: %d, sendCount: %d, orient: %c, recvCount: %d ", rank, right, left, i, sendBuffer.length, sendDispls[i], sendCounts[i], orient, bufferCount));}
 			MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.FLOAT, right, 0, buffer, 0, bufferCount, MPI.FLOAT, left, 0);
 			
 			/*
@@ -453,7 +452,6 @@ public class Reducer {
 		
 		scatter(sendBufferH, sendCountsH, sendDisplsH, 'h');
 
-		
 		float[] sendBufferV = new float[scatterLength];
 		int[] sendCountsV = new int[hSize];
 		int[] sendDisplsV = new int[hSize+1];
