@@ -83,6 +83,7 @@ public class Reducer {
 		setHostIndices();
 		
 		internalScatterBufferMap = new HashMap<Integer, Integer>();
+		internalGatherBufferMap = new HashMap<Integer, Integer>();
 		
 		//currently only handle size is a square of an integer
 		hSize = (int)Math.sqrt((double)size);
@@ -565,6 +566,7 @@ public class Reducer {
 		for(int i = 0; i < vSize; i++){
 				
 			int down =  getDownRank(i);
+			if(down == rank){down = size;}
 			vSet.addAll(gatherOrigin[down]);
 				
 		}
@@ -585,6 +587,7 @@ public class Reducer {
 		for(int i = 0; i < vSize; i++){
 				
 			int down =  getDownRank(i);
+			if(down == rank){down = size;}
 			vSet.addAll(gatherOrigin[down]);				
 		}
 		
@@ -654,7 +657,9 @@ public class Reducer {
 		int [] recvCounts = new int[size];
 		int [] recvBuffer;
 		
-		for(int i = 0; i < hSize; i++){
+		int iSize = (orient == 'h') ? hSize : vSize;	
+
+		for(int i = 0; i < iSize; i++){
 				
 			int right =  (orient == 'h') ? getRightRank(i) : getDownRank(i);
 			int left = (orient == 'h') ? getLeftRank(i) : getUpRank(i);
@@ -673,7 +678,7 @@ public class Reducer {
 					gatherDest[left].add(recvBuffer[j]);
 				}
 				
-				for(int j = 0; j<sendCounts[left]; j++){
+				for(int j = 0; j<sendCounts[i]; j++){
 					gatherOrigin[left].add(sendBuffer[sendDispls[i] + j]);
 				}
 			}else{
@@ -681,11 +686,11 @@ public class Reducer {
 				gatherDest[ii] = new LinkedList<Integer>();
 				gatherOrigin[ii] = new LinkedList<Integer>();
 				
-				for(int j = 0; j<recvCounts[ii]; j++){
+				for(int j = 0; j<recvCounts[left]; j++){
 					gatherDest[ii].add(recvBuffer[j]);
 				}
 				
-				for(int j = 0; j<sendCounts[left]; j++){
+				for(int j = 0; j<sendCounts[i]; j++){
 					gatherOrigin[ii].add(sendBuffer[sendDispls[i] + j]);
 				}	
 			}
@@ -695,7 +700,7 @@ public class Reducer {
 		
 	public void gatherConfig2d(int[] inboundIndices) throws MPIException{
 		
-		int[] sendBufferV = new int[gatherLength];
+		int[] sendBufferV = new int[inboundIndices.length];
 		int[] sendCountsV = new int[vSize];
 		int[] sendDisplsV = new int[vSize+1];
 			
@@ -704,7 +709,7 @@ public class Reducer {
 			
 		setGatherLength(inboundIndices);
 		
-		int[] sendBufferH = new int[inboundIndices.length];
+		int[] sendBufferH = new int[gatherLength];
 		int[] sendCountsH = new int[hSize];
 		int[] sendDisplsH = new int[hSize+1];
 			
@@ -719,8 +724,8 @@ public class Reducer {
 	public void gather(float [] sendBuffer, int [] sendCounts, int [] sendDispls, char orient ) throws MPIException{
 			
 		float [] recvBuffer;
-		
-		for(int i = 0; i < vSize; i++){
+		int iSize = (orient == 'h') ? hSize : vSize;	
+		for(int i = 0; i < iSize; i++){
 				
 			int right =  (orient == 'h') ? getRightRank(i) : getDownRank(i);
 			int left = (orient == 'h') ? getLeftRank(i) : getUpRank(i);
@@ -736,18 +741,19 @@ public class Reducer {
 			
 				recvBuffer = new float[bufferCount];
 			
-				MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[right], sendCounts[right], MPI.FLOAT, right, 0, recvBuffer, 0, bufferCount, MPI.FLOAT, left, 0);
+				MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.FLOAT, right, 0, recvBuffer, 0, bufferCount, MPI.FLOAT, left, 0);
 			
 				int j = 0;
-				for( float val : gatherOrigin[left]){
+				for( int val : gatherOrigin[left]){
 					internalGatherBuffer[internalGatherBufferMap.get(val)] = recvBuffer[j];
 					j++;
 				}
 			}else{
 				int j = 0;
 				int ii = (orient == 'h') ? left : size;
-				for( float val : gatherOrigin[ii]){
-					internalGatherBuffer[internalGatherBufferMap.get(val)] = sendBuffer[sendDispls[right] + j];
+				for( int val : gatherOrigin[ii]){
+				//	{System.out.println(String.format("rank: %d buffer index: %d ii: %d orient: %c val: %d", rank, internalGatherBufferMap.get(val), ii, orient, val));}
+					internalGatherBuffer[internalGatherBufferMap.get(val)] = sendBuffer[sendDispls[i] + j];
 					j++;
 				}
 			}
@@ -793,6 +799,7 @@ public class Reducer {
 		
 		for(int i = 0; i<vSize; i++){
 			int down = getDownRank(i);
+			if(down == rank){down = size;}
 			sendBufferVL += gatherDest[down].size();
 		}
 		
@@ -815,10 +822,11 @@ public class Reducer {
 		
 		int j = 0;
 		for( int i = 0; i<vSize; i++){
-			int nRank = getNeighbourRank(rank, i, 'v');
+			int nRank = getNeighbourRank(rank, i, 'h');
 			if(nRank == rank){nRank = size;}
 			for( int vid : gatherOrigin[nRank]){
 				inboundValues[j++] = internalGatherBuffer[internalGatherBufferMap.get(vid)];
+				if(rank == 8){System.out.println(String.format("nrank: %d vid: %d, internal buffer: %f", nRank, vid, internalGatherBuffer[internalGatherBufferMap.get(vid)]));}
 			}
 		}
 		
