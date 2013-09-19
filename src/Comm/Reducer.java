@@ -672,14 +672,14 @@ public class Reducer {
 			
 			if(i!=0){
 				gatherDest[left] = new LinkedList<Integer>();
-				gatherOrigin[left] = new LinkedList<Integer>();
+				gatherOrigin[right] = new LinkedList<Integer>();
 				
 				for(int j = 0; j<recvCounts[left]; j++){
 					gatherDest[left].add(recvBuffer[j]);
 				}
 				
 				for(int j = 0; j<sendCounts[i]; j++){
-					gatherOrigin[left].add(sendBuffer[sendDispls[i] + j]);
+					gatherOrigin[right].add(sendBuffer[sendDispls[i] + j]);
 				}
 			}else{
 				int ii = (orient == 'h') ? left : size;
@@ -826,7 +826,6 @@ public class Reducer {
 			if(nRank == rank){nRank = size;}
 			for( int vid : gatherOrigin[nRank]){
 				inboundValues[j++] = internalGatherBuffer[internalGatherBufferMap.get(vid)];
-				if(rank == 8){System.out.println(String.format("nrank: %d vid: %d, internal buffer: %f", nRank, vid, internalGatherBuffer[internalGatherBufferMap.get(vid)]));}
 			}
 		}
 		
