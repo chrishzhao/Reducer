@@ -83,11 +83,25 @@ public class Reducer {
 	}
 	
 	public int getScatterDest( int host, int level){
-		return 0;
+		
+		for( int dest = 0; dest < k; dest ++){
+			int right = getRight(dest, level);
+			if((right % Math.pow(k, level+1)) == (host % Math.pow(k, level+1))){
+				return dest;
+			}
+		}
+		return -1;
 	}
 	
 	public int getGatherDest( int host, int level){
-		return 0;
+		
+		for( int dest = 0; dest < k; dest ++){
+			int right = getRight(dest, level);
+			if((right % Math.pow(k, d - level)) == (host % Math.pow(k, d - level))){
+				return dest;
+			}
+		}
+		return -1;
 	}
 	
 	public void makeScatterSendBuffer( float[] sendBuffer, int[] sendCounts, int[] sendDispls, int level){
@@ -457,6 +471,10 @@ public class Reducer {
 			}
 					
 		}
+	}
+	
+	public void terminate() throws MPIException{
+		MPI.Finalize();
 	}
 
 }
