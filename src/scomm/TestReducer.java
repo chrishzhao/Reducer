@@ -14,8 +14,8 @@ public class TestReducer {
 		int modelSize = 160;
 		int hostSize = (modelSize + size - 1)/size;
 		
-		int[] outboundIndices = new int[hostSize*16];
-		float[] outboundValues = new float[hostSize*16];
+		int[] outboundIndices = new int[hostSize*5];
+		float[] outboundValues = new float[hostSize*5];
 		
 		int[] hostIndices = new int[hostSize];
 		float[] hostValues = new float[hostSize];
@@ -23,7 +23,7 @@ public class TestReducer {
 		int[] inboundIndices = new int[hostSize*16];
 		float[] inboundValues = new float[hostSize*16];
 
-		for(int i = 0; i<hostSize*16; i++){
+		for(int i = 0; i<hostSize*5; i++){
 			
 			outboundIndices[i] = (rank*hostSize + i) % modelSize;
 			outboundValues[i] =  5 + rank;

@@ -103,7 +103,7 @@ public class Reducer {
 		
 		for( int dest = 0; dest < k; dest ++){
 			int right = getRight(dest, level);
-			if((right % Math.pow(k, d - level)) == (host % Math.pow(k, d - level))){
+			if((right / (int)Math.pow(k, level)) == (host / (int)Math.pow(k, level))){
 				return dest;
 			}
 		}
@@ -215,7 +215,7 @@ public class Reducer {
 		
 		for( int i = 0; i < inboundIndices.length; i++ ){
 			int host = getHost(inboundIndices[i]);
-			int dest = getScatterDest(host, level);
+			int dest = getGatherDest(host, level);
 			if(dest >= 0){
 			sendBuffer[sendDispls[dest] + pointers[dest]] = inboundIndices[i]; 
 			pointers[dest] += 1;
@@ -268,12 +268,20 @@ public class Reducer {
 		
 		//System.out.println("gather config");
 		for( int l = d-1; l>=0; l--){
-			if(rank == 10)System.out.println(String.format("rank: %d, l: %d", rank, l));
+			//if(rank == 10)System.out.println(String.format("rank: %d, l: %d", rank, l));
 			sendBuffer = new int[gatherBuffer.size()];
 			sendCounts = new int[k];
 			sendDispls = new int[k + 1];
 			
 			makeGatherConfigSendBuffer( sendBuffer, sendCounts, sendDispls, l);
+			//if(rank == 10){
+			//System.out.println(String.format("sendbuffer level:%d", l));
+			//for(int vid: sendBuffer){System.out.print(String.format("%d ", vid));}
+			//System.out.println(String.format("sendcount level:%d", l));
+			//for(int vid: sendCounts){System.out.print(String.format("%d ", vid));}
+			//System.out.println(String.format("senddispls level:%d", l));
+			//for(int vid: sendDispls){System.out.print(String.format("%d ", vid));}
+			//}
 			gatherConfig( sendBuffer, sendCounts, sendDispls, l);
 			
 			for( int i = 0; i < k; i++){
@@ -327,7 +335,7 @@ public class Reducer {
 		for( int vid: gatherBuffer.keySet()){
 			if(hostBuffer.containsKey(vid)){
 				gatherBuffer.put(vid, hostBuffer.get(vid));
-				//if(rank==5){System.out.println(String.format("vid: %d, val: %f", vid, hostBuffer.get(vid)));}
+				//{System.out.println(String.format("rank: %d, vid: %d, val: %f", rank, vid, hostBuffer.get(vid)));}
 			}else{
 				gatherBuffer.put(vid, 0f);
 			}
@@ -351,7 +359,7 @@ public class Reducer {
 		}
 		
 		// set inboundvalues
-		if(rank==10){
+		if(rank==8){
 		for(int s = 0; s<d; s++){
 			for(int i=0; i<k; i++){
 
@@ -362,9 +370,9 @@ public class Reducer {
 			}
 		}}
 		for( int vid: gatherBuffer.keySet() ){
-			if(rank==11){System.out.println(String.format("vid: %d, val: %f", vid, gatherBuffer.get(vid)));}
+			if(rank==8){System.out.println(String.format("vid: %d, val: %f", vid, gatherBuffer.get(vid)));}
 			if(inboundMap.containsKey(vid)){
-				inboundValues[outboundMap.get(vid)] = gatherBuffer.get(vid);
+				inboundValues[inboundMap.get(vid)] = gatherBuffer.get(vid);
 			}
 		}
 		
@@ -382,7 +390,7 @@ public class Reducer {
 			scatterDest[ k * level + i] = new LinkedList<Integer>();
 			
 			for(int j = 0; j<sendCounts[i]; j++){
-				scatterDest[k * level + i].add(sendBuffer[j]);
+				scatterDest[k * level + i].add(sendBuffer[sendDispls[i]+j]);
 			}
 			
 			int right = getRight(i, level);
@@ -424,14 +432,14 @@ public class Reducer {
 			
 			
 			gatherDest[k * level + i] = new LinkedList<Integer>();
-			gatherOrigin[k * level + i] = new LinkedList<Integer>();
+			gatherOrigin[k * level + (k-i)%k] = new LinkedList<Integer>();
 				
 			for(int j = 0; j<recvCounts[i]; j++){
 				gatherDest[k * level + i].add(recvBuffer[j]);
 			}
 				
 			for(int j = 0; j<sendCounts[i]; j++){
-				gatherOrigin[k * level + i].add(sendBuffer[sendDispls[i] + j]);
+				gatherOrigin[k * level + (k-i)%k].add(sendBuffer[sendDispls[i] + j]);
 			}
 			
 			
