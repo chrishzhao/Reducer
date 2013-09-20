@@ -1,0 +1,1348 @@
+size: 32, nvertices: 61578414, nv_per_proc: 1924326
+initialize model parameters ...
+rank: 14, nr: 11552843, nc: 11332413
+rank: 21, nr: 11549788, nc: 11328448
+rank: 1, nr: 11549259, nc: 11331832
+rank: 7, nr: 11552322, nc: 11331403
+rank: 18, nr: 11550342, nc: 11331683
+rank: 23, nr: 11549737, nc: 11327942
+rank: 8, nr: 11550424, nc: 11328913
+rank: 30, nr: 11548853, nc: 11331979
+rank: 5, nr: 11554246, nc: 11330739
+rank: 28, nr: 11547810, nc: 11333767
+rank: 26, nr: 11545794, nc: 11328716
+rank: 9, nr: 11549950, nc: 11332715
+rank: 6, nr: 11550676, nc: 11324383
+rank: 3, nr: 11550322, nc: 11332517
+rank: 10, nr: 11548496, nc: 11329504
+rank: 25, nr: 11551030, nc: 11331294
+rank: 16, nr: 11550162, nc: 11333726
+rank: 24, nr: 11551171, nc: 11328363
+rank: 29, nr: 11553886, nc: 11329406
+rank: 12, nr: 11550711, nc: 11332486
+rank: 20, nr: 11550012, nc: 11332968
+rank: 2, nr: 11549897, nc: 11330679
+rank: 0, nr: 11550889, nc: 11329957
+rank: 11, nr: 11547556, nc: 11330263
+rank: 22, nr: 11549216, nc: 11332747
+rank: 27, nr: 11550655, nc: 11330817
+rank: 13, nr: 11546661, nc: 11332513
+rank: 19, nr: 11547779, nc: 11334589
+rank: 4, nr: 11545662, nc: 11336052
+rank: 17, nr: 11550621, nc: 11330631
+rank: 31, nr: 11549978, nc: 11332771
+rank: 15, nr: 11551298, nc: 11333537
+vertices assignment ...
+reduce config ...
+initialize vector ...
+model update ...
+compute (gflops, time)(0.10965198,0.837)
+communicate model ...
+processor 7 old comm time: 3.413000 s)
+processor 7 comm time: 3.412830 s)
+processor 15 old comm time: 3.889000 s)
+processor 23 old comm time: 3.907000 s)
+processor 31 old comm time: 3.454000 s)
+processor 7 sendrecv time: 2.922336 s
+processor 1 old comm time: 3.959000 s)
+processor 13 old comm time: 2.489000 s)
+processor 23 comm time: 3.907606 s)
+processor 0 old comm time: 3.948000 s)
+processor 0 comm time: 3.948063 s)
+processor 15 comm time: 3.888857 s)
+processor 31 comm time: 3.453037 s)
+processor 1 comm time: 3.959000 s)
+processor 11 old comm time: 3.376000 s)
+processor 7 throughput: 0.063382 GB/sec
+processor 23 sendrecv time: 3.365259 s
+processor 17 old comm time: 3.918000 s)
+processor 19 old comm time: 3.908000 s)
+processor 2 old comm time: 3.444000 s)
+processor 31 sendrecv time: 3.008056 s
+processor 5 old comm time: 3.308000 s)
+processor 5 comm time: 3.307141 s)
+processor 3 old comm time: 3.446000 s)
+processor 3 comm time: 3.446860 s)
+processor 3 sendrecv time: 3.119556 s
+processor 15 sendrecv time: 3.375237 s
+processor 31 throughput: 0.052805 GB/sec
+processor 1 sendrecv time: 3.740009 s
+processor 23 throughput: 0.065558 GB/sec
+processor 12 old comm time: 3.374000 s)
+processor 8 old comm time: 3.368000 s)
+processor 25 old comm time: 3.902000 s)
+processor 0 sendrecv time: 3.729613 s
+processor 0 throughput: 0.027253 GB/sec
+processor 15 throughput: 0.063250 GB/sec
+processor 13 comm time: 2.488604 s)
+processor 3 throughput: 0.033836 GB/sec
+processor 11 comm time: 3.376217 s)
+processor 6 old comm time: 3.433000 s)
+processor 9 old comm time: 3.396000 s)
+processor 9 comm time: 3.395872 s)
+processor 4 old comm time: 3.447000 s)processor 17 comm time: 3.918091 s)
+processor 19 comm time: 3.908237 s)
+processor 8 comm time: 3.368323 s)
+processor 1 throughput: 0.025778 GB/sec
+processor 11 sendrecv time: 2.807794 s
+processor 16 old comm time: 3.858000 s)
+processor 25 comm time: 3.902281 s)
+processor 19 sendrecv time: 3.409998 s
+processor 5 sendrecv time: 3.021847 s
+processor 5 throughput: 0.034384 GB/sec
+processor 27 old comm time: 3.934000 s)
+processor 2 comm time: 3.443606 s)
+processor 19 throughput: 0.062867 GB/sec
+processor 12 comm time: 3.373427 s)
+processor 9 sendrecv time: 2.886230 s
+processor 24 old comm time: 3.925000 s)
+processor 17 sendrecv time: 3.416863 s
+processor 29 old comm time: 3.947000 s)
+processor 27 comm time: 3.933863 s)
+processor 16 comm time: 3.858414 s)
+processor 25 sendrecv time: 3.404568 s
+processor 11 throughput: 0.078768 GB/sec
+processor 17 throughput: 0.058600 GB/sec
+processor 25 throughput: 0.061342 GB/sec
+processor 13 sendrecv time: 1.906632 s
+processor 29 comm time: 3.946860 s)
+processor 27 sendrecv time: 3.456792 s
+processor 9 throughput: 0.072156 GB/sec
+processor 13 throughput: 0.113532 GB/sec
+processor 27 throughput: 0.058724 GB/sec
+processor 29 sendrecv time: 3.481583 s
+processor 29 throughput: 0.054789 GB/sec
+processor 21 old comm time: 3.918000 s)
+processor 21 comm time: 3.917561 s)
+processor 21 sendrecv time: 3.428415 s
+processor 21 throughput: 0.060953 GB/sec
+
+processor 8 sendrecv time: 2.870830 s
+processor 16 sendrecv time: 3.429259 s
+processor 6 comm time: 3.432854 s)
+processor 10 old comm time: 3.402000 s)
+processor 28 old comm time: 3.933000 s)
+processor 24 comm time: 3.924911 s)
+processor 16 throughput: 0.054476 GB/sec
+processor 10 comm time: 3.401417 s)
+processor 20 old comm time: 3.912000 s)
+processor 8 throughput: 0.072115 GB/sec
+processor 2 sendrecv time: 3.196476 s
+processor 12 sendrecv time: 2.299794 s
+processor 24 sendrecv time: 3.363538 s
+processor 14 old comm time: 3.400000 s)
+processor 28 comm time: 3.932433 s)
+processor 24 throughput: 0.066764 GB/sec
+processor 18 old comm time: 3.894000 s)
+processor 20 comm time: 3.911568 s)
+processor 2 throughput: 0.030679 GB/sec
+processor 12 throughput: 0.094559 GB/sec
+processor 6 sendrecv time: 3.148940 s
+processor 28 sendrecv time: 3.426354 s
+processor 18 comm time: 3.893255 s)
+processor 28 throughput: 0.059051 GB/sec
+processor 10 sendrecv time: 2.917070 s
+processor 20 sendrecv time: 3.419077 s
+processor 14 comm time: 3.399459 s)
+processor 4 comm time: 3.446936 s)
+processor 18 sendrecv time: 3.393459 s
+processor 20 throughput: 0.061111 GB/sec
+processor 26 old comm time: 3.927000 s)
+processor 4 sendrecv time: 3.119156 s
+processor 22 old comm time: 3.916000 s)
+processor 18 throughput: 0.062536 GB/sec
+processor 10 throughput: 0.074988 GB/sec
+processor 6 throughput: 0.033098 GB/sec
+processor 26 comm time: 3.927067 s)
+processor 4 throughput: 0.033581 GB/sec
+processor 30 old comm time: 3.936000 s)
+processor 26 sendrecv time: 3.425021 s
+processor 22 comm time: 3.915326 s)
+processor 14 sendrecv time: 2.880110 s
+processor 14 throughput: 0.074949 GB/sec
+processor 22 sendrecv time: 3.399093 s
+processor 30 comm time: 3.935855 s)
+processor 22 throughput: 0.062635 GB/sec
+processor 30 sendrecv time: 3.495426 s
+processor 26 throughput: 0.060346 GB/sec
+processor 30 throughput: 0.051286 GB/sec
+model update ...
+compute (gflops, time)(0.11233625,0.817)
+communicate model ...
+processor 23 old comm time: 3.169000 s)
+processor 16 old comm time: 3.184000 s)
+processor 15 old comm time: 3.151000 s)
+processor 31 old comm time: 3.159000 s)
+processor 17 old comm time: 3.193000 s)
+processor 0 old comm time: 3.165000 s)
+processor 0 comm time: 3.164689 s)
+processor 15 comm time: 3.150326 s)
+processor 31 comm time: 3.159525 s)
+processor 1 old comm time: 3.179000 s)
+processor 3 old comm time: 3.170000 s)
+processor 3 comm time: 3.170527 s)
+processor 7 old comm time: 3.159000 s)
+processor 8 old comm time: 3.167000 s)
+processor 15 sendrecv time: 5.428944 s
+processor 31 sendrecv time: 5.810088 s
+processor 1 comm time: 3.178587 s)
+processor 11 old comm time: 3.166000 s)
+processor 23 comm time: 3.168866 s)
+processor 7 comm time: 3.158524 s)
+processor 24 old comm time: 3.185000 s)
+processor 15 throughput: 0.078647 GB/sec
+processor 31 throughput: 0.054678 GB/sec
+processor 17 comm time: 3.193394 s)
+processor 19 old comm time: 3.158000 s)
+processor 16 comm time: 3.184652 s)
+processor 9 old comm time: 3.156000 s)
+processor 9 comm time: 3.156093 s)
+processor 3 sendrecv time: 6.037287 s
+processor 3 throughput: 0.034967 GB/sec
+processor 7 sendrecv time: 5.607963 s
+processor 0 sendrecv time: 6.734888 s
+processor 0 throughput: 0.030184 GB/sec
+processor 17 sendrecv time: 5.542870 s
+processor 27 old comm time: 3.157000 s)
+processor 23 sendrecv time: 6.069246 s
+processor 10 old comm time: 3.181000 s)
+processor 1 sendrecv time: 6.757890 s
+processor 19 comm time: 3.158266 s)
+processor 7 throughput: 0.066057 GB/sec
+processor 4 old comm time: 3.169000 s)
+processor 5 old comm time: 3.171000 s)
+processor 11 comm time: 3.165929 s)
+processor 23 throughput: 0.072701 GB/sec
+processor 8 comm time: 3.166990 s)
+processor 25 old comm time: 3.155000 s)
+processor 19 sendrecv time: 5.516454 s
+processor 16 sendrecv time: 5.613368 s
+processor 9 sendrecv time: 4.939265 s
+processor 27 comm time: 3.157109 s)
+processor 2 old comm time: 3.159000 s)
+processor 2 comm time: 3.158876 s)
+processor 1 throughput: 0.028532 GB/sec
+processor 19 throughput: 0.077722 GB/sec
+processor 5 comm time: 3.171084 s)
+processor 5 sendrecv time: 5.931783 s
+processor 5 throughput: 0.035033 GB/sec
+processor 11 sendrecv time: 4.821137 s
+processor 20 old comm time: 3.189000 s)
+processor 24 comm time: 3.185395 s)
+processor 25 comm time: 3.154201 s)
+processor 27 sendrecv time: 6.206079 s
+processor 17 throughput: 0.072247 GB/sec
+processor 11 throughput: 0.091747 GB/sec
+processor 16 throughput: 0.066560 GB/sec
+processor 9 throughput: 0.084327 GB/sec
+processor 27 throughput: 0.065419 GB/sec
+processor 12 old comm time: 3.165000 s)
+processor 8 sendrecv time: 5.531441 s
+processor 29 old comm time: 3.198000 s)
+processor 18 old comm time: 3.195000 s)
+processor 25 sendrecv time: 6.130214 s
+processor 18 comm time: 3.195194 s)
+processor 21 old comm time: 3.184000 s)
+processor 20 comm time: 3.189792 s)processor 25 throughput: 0.068135 GB/sec
+processor 24 sendrecv time: 6.057848 s
+processor 13 old comm time: 3.156000 s)
+processor 13 comm time: 3.155842 s)processor 26 old comm time: 3.189000 s)
+processor 21 comm time: 3.183997 s)
+processor 28 old comm time: 3.158000 s)
+processor 29 comm time: 3.198012 s)
+processor 21 sendrecv time: 6.189823 s
+processor 8 throughput: 0.074856 GB/sec
+processor 2 sendrecv time: 6.161280 s
+processor 21 throughput: 0.067521 GB/sec
+
+
+processor 24 throughput: 0.074139 GB/sec
+processor 29 sendrecv time: 6.286159 s
+processor 13 sendrecv time: 3.899616 s
+processor 13 throughput: 0.111018 GB/sec
+processor 29 throughput: 0.060690 GB/sec
+processor 6 old comm time: 3.138000 s)
+processor 28 comm time: 3.158188 s)
+processor 22 old comm time: 3.190000 s)
+processor 12 comm time: 3.164949 s)
+processor 18 sendrecv time: 5.530158 s
+processor 28 sendrecv time: 6.141397 s
+processor 10 comm time: 3.180917 s)
+processor 20 sendrecv time: 5.168117 s
+processor 2 throughput: 0.031833 GB/sec
+processor 12 sendrecv time: 4.350158 s
+processor 22 comm time: 3.190138 s)
+processor 12 throughput: 0.099981 GB/sec
+processor 10 sendrecv time: 5.018856 s
+processor 28 throughput: 0.065890 GB/sec
+processor 4 comm time: 3.169545 s)processor 6 comm time: 3.137610 s)
+processor 18 throughput: 0.076747 GB/sec
+processor 20 throughput: 0.080859 GB/sec
+processor 26 comm time: 3.188904 s)
+
+processor 14 old comm time: 3.172000 s)
+processor 4 sendrecv time: 6.029507 s
+processor 26 sendrecv time: 6.189957 s
+processor 4 throughput: 0.034744 GB/sec
+processor 6 sendrecv time: 6.026851 s
+processor 10 throughput: 0.087169 GB/sec
+processor 30 old comm time: 3.117000 s)
+processor 26 throughput: 0.066782 GB/sec
+processor 22 sendrecv time: 6.154556 s
+processor 14 comm time: 3.172696 s)
+processor 6 throughput: 0.034587 GB/sec
+processor 30 comm time: 3.116984 s)
+processor 22 throughput: 0.069185 GB/sec
+processor 14 sendrecv time: 4.954644 s
+processor 30 sendrecv time: 5.581784 s
+processor 14 throughput: 0.087135 GB/sec
+processor 30 throughput: 0.064233 GB/sec
+model update ...
+compute (gflops, time)(0.11261191,0.815)
+communicate model ...
+processor 15 old comm time: 1.717000 s)
+processor 31 old comm time: 1.720000 s)
+processor 7 old comm time: 1.724000 s)
+processor 15 comm time: 1.716954 s)
+processor 7 comm time: 1.724529 s)
+processor 31 comm time: 1.719632 s)
+processor 11 old comm time: 1.724000 s)
+processor 23 old comm time: 1.721000 s)
+processor 1 old comm time: 1.721000 s)
+processor 31 sendrecv time: 7.152733 s
+processor 5 old comm time: 1.734000 s)
+processor 7 sendrecv time: 6.879972 s
+processor 15 sendrecv time: 6.680411 s
+processor 9 old comm time: 1.707000 s)
+processor 3 old comm time: 1.709000 s)
+processor 3 comm time: 1.708857 s)
+processor 23 comm time: 1.721277 s)
+processor 11 comm time: 1.723399 s)
+processor 7 throughput: 0.080766 GB/sec
+processor 0 old comm time: 1.715000 s)
+processor 0 comm time: 1.715416 s)
+processor 31 throughput: 0.066621 GB/sec
+processor 1 comm time: 1.720490 s)
+processor 13 old comm time: 1.735000 s)
+processor 23 sendrecv time: 7.310164 s
+processor 1 sendrecv time: 8.297063 s
+processor 9 comm time: 1.706340 s)
+processor 17 old comm time: 1.687000 s)
+processor 19 old comm time: 1.740000 s)
+processor 23 throughput: 0.090539 GB/sec
+processor 0 sendrecv time: 8.268886 s
+processor 0 throughput: 0.036877 GB/sec
+processor 15 throughput: 0.095871 GB/sec
+processor 1 throughput: 0.034859 GB/sec
+processor 2 old comm time: 1.722000 s)
+processor 5 comm time: 1.733968 s)
+processor 5 sendrecv time: 7.411142 s
+processor 5 throughput: 0.042060 GB/sec
+processor 3 sendrecv time: 7.470040 s
+processor 3 throughput: 0.042390 GB/sec
+processor 4 old comm time: 1.706000 s)
+processor 9 sendrecv time: 6.167854 s
+processor 8 old comm time: 1.716000 s)
+processor 17 comm time: 1.687831 s)
+processor 27 old comm time: 1.744000 s)
+processor 17 sendrecv time: 6.786370 s
+processor 19 comm time: 1.740229 s)
+processor 16 old comm time: 1.709000 s)
+processor 8 comm time: 1.716162 s)
+processor 13 comm time: 1.735379 s)
+processor 16 comm time: 1.708550 s)
+processor 25 old comm time: 1.745000 s)
+processor 11 sendrecv time: 6.024512 s
+processor 2 comm time: 1.722271 s)
+processor 21 old comm time: 1.726000 s)
+processor 19 sendrecv time: 6.825628 s
+processor 12 old comm time: 1.711000 s)
+processor 25 comm time: 1.744356 s)
+processor 27 comm time: 1.743901 s)
+processor 17 throughput: 0.088514 GB/sec
+processor 19 throughput: 0.094222 GB/sec
+processor 6 old comm time: 1.709000 s)
+processor 12 comm time: 1.711132 s)
+processor 29 old comm time: 1.748000 s)
+processor 11 throughput: 0.110132 GB/sec
+processor 24 old comm time: 1.695000 s)
+processor 9 throughput: 0.101295 GB/sec
+processor 27 sendrecv time: 7.528889 s
+processor 16 sendrecv time: 6.944074 s
+processor 21 comm time: 1.726390 s)
+processor 27 throughput: 0.080887 GB/sec
+processor 10 old comm time: 1.721000 s)
+processor 25 sendrecv time: 7.432392 s
+processor 28 old comm time: 1.727000 s)
+processor 13 sendrecv time: 5.100094 s
+processor 8 sendrecv time: 6.781981 s
+processor 25 throughput: 0.084297 GB/sec
+processor 21 sendrecv time: 7.491697 s
+processor 16 throughput: 0.080707 GB/sec
+processor 24 comm time: 1.695282 s)
+processor 29 comm time: 1.747907 s)
+processor 10 comm time: 1.720814 s)
+processor 20 old comm time: 1.732000 s)
+processor 2 sendrecv time: 7.670586 s
+processor 2 throughput: 0.038354 GB/sec
+processor 12 sendrecv time: 5.568275 s
+processor 8 throughput: 0.091580 GB/sec
+processor 14 old comm time: 1.717000 s)
+processor 28 comm time: 1.726677 s)
+processor 24 sendrecv time: 7.248156 s
+processor 21 throughput: 0.083681 GB/sec
+processor 13 throughput: 0.127329 GB/sec
+processor 29 sendrecv time: 7.626050 s
+processor 29 throughput: 0.075040 GB/sec
+processor 18 old comm time: 1.748000 s)
+processor 12 throughput: 0.117164 GB/sec
+processor 24 throughput: 0.092946 GB/sec
+processor 6 comm time: 1.708046 s)
+processor 20 comm time: 1.731979 s)
+processor 18 comm time: 1.747692 s)
+processor 28 sendrecv time: 7.414927 s
+processor 26 old comm time: 1.731000 s)
+processor 20 sendrecv time: 6.376776 s
+processor 14 comm time: 1.716907 s)
+processor 28 throughput: 0.081860 GB/sec
+processor 4 comm time: 1.706120 s)
+processor 18 sendrecv time: 6.837191 s
+processor 20 throughput: 0.098299 GB/sec
+processor 10 sendrecv time: 6.287955 s
+processor 30 old comm time: 1.689000 s)
+processor 4 sendrecv time: 7.453511 s
+processor 18 throughput: 0.093114 GB/sec
+processor 4 throughput: 0.042159 GB/sec
+processor 26 comm time: 1.730600 s)
+processor 10 throughput: 0.104363 GB/sec
+processor 22 old comm time: 1.722000 s)
+processor 6 sendrecv time: 7.483584 s
+processor 26 sendrecv time: 7.483438 s
+processor 14 sendrecv time: 6.198164 s
+processor 26 throughput: 0.082858 GB/sec
+processor 22 comm time: 1.721478 s)
+processor 6 throughput: 0.041781 GB/sec
+processor 30 comm time: 1.689249 s)
+processor 22 sendrecv time: 7.431001 s
+processor 14 throughput: 0.104480 GB/sec
+processor 30 sendrecv time: 6.824151 s
+processor 22 throughput: 0.085952 GB/sec
+processor 30 throughput: 0.078809 GB/sec
+model update ...
+compute (gflops, time)(0.112750255,0.814)
+communicate model ...
+processor 15 old comm time: 3.352000 s)
+processor 31 old comm time: 3.377000 s)
+processor 7 old comm time: 3.345000 s)
+processor 31 comm time: 3.376153 s)
+processor 3 old comm time: 3.374000 s)
+processor 7 comm time: 3.345485 s)
+processor 15 comm time: 3.352038 s)
+processor 15 sendrecv time: 9.564193 s
+processor 31 sendrecv time: 10.152816 s
+processor 1 old comm time: 3.360000 s)
+processor 23 old comm time: 3.385000 s)
+processor 0 old comm time: 3.358000 s)
+processor 0 comm time: 3.357812 s)
+processor 31 throughput: 0.062580 GB/sec
+processor 5 old comm time: 3.348000 s)
+processor 11 old comm time: 3.350000 s)
+processor 7 sendrecv time: 9.786934 s
+processor 9 old comm time: 3.355000 s)
+processor 11 comm time: 3.349920 s)
+processor 23 comm time: 3.384895 s)
+processor 7 throughput: 0.075702 GB/sec
+processor 12 old comm time: 3.343000 s)
+processor 15 throughput: 0.089285 GB/sec
+processor 1 comm time: 3.360006 s)
+processor 19 old comm time: 3.377000 s)
+processor 1 sendrecv time: 11.487667 s
+processor 23 sendrecv time: 10.219354 s
+processor 8 old comm time: 3.352000 s)
+processor 3 comm time: 3.373419 s)
+processor 3 sendrecv time: 10.564463 s
+processor 3 throughput: 0.039965 GB/sec
+processor 23 throughput: 0.086353 GB/sec
+processor 16 old comm time: 3.380000 s)
+processor 13 old comm time: 3.367000 s)
+processor 0 sendrecv time: 11.452291 s
+processor 0 throughput: 0.035501 GB/sec
+processor 25 old comm time: 3.384000 s)
+processor 11 sendrecv time: 8.857951 sprocessor 6 old comm time: 3.366000 s)
+processor 17 old comm time: 3.339000 s)
+processor 19 comm time: 3.377405 s)
+processor 8 comm time: 3.352150 s)
+processor 5 comm time: 3.347792 s)
+processor 27 old comm time: 3.334000 s)
+processor 9 comm time: 3.355348 s)
+processor 9 sendrecv time: 9.047174 s
+processor 19 sendrecv time: 9.738447 s
+processor 16 comm time: 3.379353 s)
+processor 10 old comm time: 3.368000 s)
+processor 17 comm time: 3.338914 s)
+
+processor 11 throughput: 0.099871 GB/sec
+processor 4 old comm time: 3.357000 s)
+processor 1 throughput: 0.033570 GB/sec
+processor 19 throughput: 0.088053 GB/sec
+processor 2 old comm time: 3.366000 s)
+processor 2 comm time: 3.366537 s)
+processor 13 comm time: 3.366741 s)
+processor 27 comm time: 3.333606 s)
+processor 20 old comm time: 3.363000 s)
+processor 9 throughput: 0.092076 GB/sec
+processor 27 sendrecv time: 10.442683 s
+processor 24 old comm time: 3.337000 s)
+processor 17 sendrecv time: 9.681499 s
+processor 27 throughput: 0.077757 GB/sec
+processor 16 sendrecv time: 9.942766 s
+processor 21 old comm time: 2.401000 s)
+processor 2 sendrecv time: 10.844098 s
+processor 25 comm time: 3.383670 s)
+processor 12 comm time: 3.342549 s)
+processor 17 throughput: 0.082727 GB/sec
+processor 8 sendrecv time: 9.669583 s
+processor 5 sendrecv time: 10.519248 s
+processor 5 throughput: 0.039510 GB/sec
+processor 25 sendrecv time: 10.374470 s
+processor 16 throughput: 0.075155 GB/sec
+processor 14 old comm time: 3.358000 s)
+processor 29 old comm time: 3.384000 s)
+processor 25 throughput: 0.080521 GB/sec
+processor 28 old comm time: 3.360000 s)
+processor 24 comm time: 3.336841 s)
+processor 21 comm time: 2.401574 s)
+processor 18 old comm time: 3.385000 s)
+processor 21 sendrecv time: 9.404468 s
+processor 28 comm time: 3.360262 s)
+processor 29 comm time: 3.384233 s)
+processor 8 throughput: 0.085642 GB/sec
+processor 13 sendrecv time: 7.929196 s
+processor 10 comm time: 3.367692 s)
+processor 21 throughput: 0.088882 GB/sec
+processor 20 comm time: 3.362745 s)
+processor 13 throughput: 0.109198 GB/sec
+processor 29 sendrecv time: 10.603745 s
+processor 24 sendrecv time: 10.084826 s
+processor 29 throughput: 0.071956 GB/sec
+processor 6 comm time: 3.365944 s)
+processor 12 sendrecv time: 8.423583 s
+processor 24 throughput: 0.089069 GB/sec
+processor 18 comm time: 3.384838 s)
+processor 4 comm time: 3.357106 s)processor 26 old comm time: 3.380000 s)
+processor 28 sendrecv time: 10.323972 s
+processor 2 throughput: 0.036173 GB/sec
+
+processor 14 comm time: 3.357707 s)
+processor 12 throughput: 0.103266 GB/sec
+processor 18 sendrecv time: 9.781920 s
+processor 20 sendrecv time: 9.215916 s
+processor 10 sendrecv time: 8.541456 s
+processor 28 throughput: 0.078392 GB/sec
+processor 6 sendrecv time: 10.614047 s
+processor 20 throughput: 0.090688 GB/sec
+processor 18 throughput: 0.086778 GB/sec
+processor 4 sendrecv time: 10.557640 s
+processor 26 comm time: 3.380227 s)
+processor 4 throughput: 0.039685 GB/sec
+processor 10 throughput: 0.102439 GB/sec
+processor 30 old comm time: 3.387000 s)
+processor 22 old comm time: 2.651000 s)
+processor 26 sendrecv time: 10.423978 s
+processor 14 sendrecv time: 9.082259 s
+processor 26 throughput: 0.079312 GB/sec
+processor 22 comm time: 2.650370 s)
+processor 6 throughput: 0.039278 GB/sec
+processor 30 comm time: 3.386331 s)
+processor 14 throughput: 0.095070 GB/sec
+processor 22 sendrecv time: 9.599524 s
+processor 30 sendrecv time: 9.765056 s
+processor 22 throughput: 0.088714 GB/sec
+processor 30 throughput: 0.073432 GB/sec
+model update ...
+compute (gflops, time)(0.11206192,0.819)
+communicate model ...
+processor 31 old comm time: 1.996000 s)
+processor 7 old comm time: 1.979000 s)
+processor 15 old comm time: 1.948000 s)
+processor 15 comm time: 1.948014 s)processor 31 comm time: 1.996528 s)
+processor 3 old comm time: 1.937000 s)
+processor 7 comm time: 1.979526 s)
+processor 0 old comm time: 1.966000 s)
+
+processor 31 sendrecv time: 11.776335 s
+processor 5 old comm time: 1.985000 s)
+processor 11 old comm time: 1.968000 s)
+processor 23 old comm time: 1.983000 s)
+processor 2 old comm time: 1.991000 s)
+processor 15 sendrecv time: 11.047444 s
+processor 31 throughput: 0.067441 GB/sec
+processor 9 old comm time: 1.995000 s)
+processor 7 sendrecv time: 11.317245 s
+processor 12 old comm time: 1.970000 s)
+processor 15 throughput: 0.096622 GB/sec
+processor 1 old comm time: 1.997000 s)
+processor 3 comm time: 1.936704 s)
+processor 3 sendrecv time: 12.226190 s
+processor 3 throughput: 0.043166 GB/sec
+processor 7 throughput: 0.081832 GB/secprocessor 8 old comm time: 1.987000 s)
+processor 1 comm time: 1.996249 s)
+processor 11 comm time: 1.968184 s)
+processor 23 comm time: 1.983591 s)
+processor 1 sendrecv time: 13.302269 s
+
+processor 0 comm time: 1.966096 s)
+processor 0 sendrecv time: 13.236250 s
+processor 4 old comm time: 1.960000 s)
+processor 9 comm time: 1.995017 s)
+processor 19 old comm time: 1.990000 s)
+processor 23 sendrecv time: 11.728687 s
+processor 23 throughput: 0.094051 GB/sec
+processor 8 comm time: 1.987535 s)
+processor 17 old comm time: 2.001000 s)
+processor 11 sendrecv time: 10.305694 s
+processor 16 old comm time: 1.989000 s)
+processor 13 old comm time: 1.977000 s)
+processor 19 comm time: 1.990188 s)
+processor 0 throughput: 0.038396 GB/sec
+processor 25 old comm time: 1.981000 s)
+processor 27 old comm time: 1.994000 s)
+processor 17 comm time: 2.001237 s)
+processor 19 sendrecv time: 11.297143 s
+processor 2 comm time: 1.991463 s)
+processor 1 throughput: 0.036238 GB/sec
+processor 11 throughput: 0.107302 GB/sec
+processor 6 old comm time: 1.618000 s)
+processor 12 comm time: 1.969302 s)
+processor 25 comm time: 1.980200 s)
+processor 19 throughput: 0.094881 GB/sec
+processor 5 comm time: 1.985387 s)
+processor 5 sendrecv time: 12.251535 s
+processor 5 throughput: 0.042405 GB/sec
+processor 27 comm time: 1.993220 s)
+processor 24 old comm time: 1.961000 s)
+processor 9 sendrecv time: 10.562911 s
+processor 9 throughput: 0.098580 GB/secprocessor 27 sendrecv time: 12.015862 s
+processor 16 comm time: 1.988173 s)
+processor 10 old comm time: 1.968000 s)
+processor 17 sendrecv time: 11.238538 s
+processor 27 throughput: 0.084470 GB/sec
+processor 20 old comm time: 1.967000 s)
+processor 13 comm time: 1.976891 s)
+processor 8 sendrecv time: 11.190253 s
+processor 25 sendrecv time: 11.915144 s
+processor 16 sendrecv time: 11.552038 s
+processor 17 throughput: 0.089081 GB/sec
+processor 2 sendrecv time: 12.619489 s
+processor 21 old comm time: 1.974000 s)
+processor 28 old comm time: 1.997000 s)
+
+processor 25 throughput: 0.087637 GB/sec
+processor 24 comm time: 1.961424 s)
+processor 29 old comm time: 1.974000 s)
+processor 16 throughput: 0.080857 GB/sec
+processor 21 comm time: 1.974422 s)
+processor 14 old comm time: 1.954000 s)
+processor 13 sendrecv time: 9.370214 s
+processor 20 comm time: 1.966962 s)
+processor 21 sendrecv time: 10.890076 s
+processor 8 throughput: 0.092505 GB/sec
+processor 18 old comm time: 2.007000 s)
+processor 29 comm time: 1.973376 s)
+processor 21 throughput: 0.095946 GB/sec
+processor 13 throughput: 0.115506 GB/sec
+processor 29 sendrecv time: 12.170565 s
+processor 12 sendrecv time: 9.905317 s
+processor 24 sendrecv time: 11.545094 s
+processor 10 comm time: 1.968483 s)
+processor 29 throughput: 0.078366 GB/sec
+processor 28 comm time: 1.997319 s)
+processor 24 throughput: 0.097254 GB/sec
+processor 2 throughput: 0.038855 GB/sec
+processor 12 throughput: 0.109773 GB/sec
+processor 14 comm time: 1.954409 s)
+processor 4 comm time: 1.959857 s)processor 18 comm time: 2.006523 s)
+processor 28 sendrecv time: 11.867729 s
+processor 20 sendrecv time: 10.659273 s
+processor 10 sendrecv time: 10.018229 s
+processor 18 sendrecv time: 11.347660 s
+processor 28 throughput: 0.085243 GB/sec
+processor 26 old comm time: 1.983000 s)
+
+processor 6 comm time: 1.617998 s)
+processor 20 throughput: 0.098011 GB/sec
+processor 6 sendrecv time: 11.981512 s
+processor 4 sendrecv time: 12.234359 s
+processor 18 throughput: 0.093505 GB/sec
+processor 4 throughput: 0.042808 GB/sec
+processor 26 comm time: 1.983206 s)
+processor 30 old comm time: 1.963000 s)
+processor 10 throughput: 0.109173 GB/sec
+processor 22 old comm time: 1.987000 s)
+processor 26 sendrecv time: 11.971190 s
+processor 26 throughput: 0.086327 GB/sec
+processor 22 comm time: 1.986844 s)
+processor 14 sendrecv time: 10.562300 s
+processor 6 throughput: 0.043494 GB/sec
+processor 30 comm time: 1.962505 s)
+processor 14 throughput: 0.102185 GB/sec
+processor 22 sendrecv time: 11.107329 s
+processor 30 sendrecv time: 11.278473 s
+processor 22 throughput: 0.095839 GB/sec
+processor 30 throughput: 0.079473 GB/sec
+model update ...
+compute (gflops, time)(0.11219891,0.818)
+communicate model ...
+processor 7 old comm time: 1.684000 s)
+processor 15 old comm time: 1.677000 s)
+processor 31 old comm time: 1.685000 s)
+processor 15 comm time: 1.677084 s)processor 3 old comm time: 1.685000 s)
+processor 7 comm time: 1.683840 s)
+processor 31 comm time: 1.684838 s)
+processor 1 old comm time: 1.686000 s)
+processor 23 old comm time: 1.722000 s)
+
+processor 31 sendrecv time: 13.106681 s
+processor 5 old comm time: 1.711000 s)
+processor 11 old comm time: 1.685000 s)
+processor 7 sendrecv time: 12.559414 s
+processor 23 comm time: 1.722019 s)
+processor 0 old comm time: 1.686000 s)
+processor 9 old comm time: 1.676000 s)
+processor 3 comm time: 1.684866 s)
+processor 3 sendrecv time: 13.659439 s
+processor 3 throughput: 0.046364 GB/sec
+processor 7 throughput: 0.088486 GB/sec
+processor 8 old comm time: 1.684000 s)
+processor 15 sendrecv time: 12.257416 s
+processor 31 throughput: 0.072715 GB/sec
+processor 1 comm time: 1.686213 s)
+processor 9 comm time: 1.676939 s)
+processor 11 comm time: 1.684675 s)
+processor 23 sendrecv time: 12.983231 s
+processor 16 old comm time: 1.709000 s)
+processor 15 throughput: 0.104501 GB/sec
+processor 0 comm time: 1.685446 s)
+processor 0 sendrecv time: 14.763608 s
+processor 0 throughput: 0.041308 GB/sec
+processor 17 old comm time: 1.709000 s)
+processor 19 old comm time: 1.667000 s)
+processor 23 throughput: 0.101956 GB/sec
+processor 2 old comm time: 1.689000 s)
+processor 25 old comm time: 1.700000 s)
+processor 11 sendrecv time: 11.471338 s
+processor 4 old comm time: 1.673000 s)
+processor 1 sendrecv time: 14.830392 s
+processor 19 comm time: 1.666466 s)
+processor 17 comm time: 1.709066 s)
+processor 27 old comm time: 1.713000 s)
+processor 8 comm time: 1.684791 s)
+processor 2 comm time: 1.688955 s)
+processor 1 throughput: 0.039005 GB/sec
+processor 19 sendrecv time: 12.522927 s
+processor 13 old comm time: 1.680000 s)
+processor 11 throughput: 0.115678 GB/sec
+processor 12 old comm time: 1.672000 s)
+processor 24 old comm time: 1.711000 s)
+processor 25 comm time: 1.699499 s)
+processor 19 throughput: 0.102712 GB/sec
+processor 16 comm time: 1.708579 s)
+processor 5 comm time: 1.711557 s)
+processor 5 sendrecv time: 13.711737 s
+processor 5 throughput: 0.045467 GB/sec
+processor 27 comm time: 1.712878 s)
+processor 9 sendrecv time: 11.762122 s
+processor 9 throughput: 0.106235 GB/sec
+processor 27 sendrecv time: 13.317504 s
+processor 6 old comm time: 1.685000 s)
+processor 12 comm time: 1.671723 s)
+processor 17 sendrecv time: 12.502040 s
+processor 27 throughput: 0.091457 GB/sec
+processor 8 sendrecv time: 12.406998 s
+processor 13 comm time: 1.679650 s)
+processor 25 sendrecv time: 13.181093 s
+processor 24 comm time: 1.710614 s)
+processor 16 sendrecv time: 12.881332 s
+processor 17 throughput: 0.096094 GB/sec
+processor 10 old comm time: 1.684000 s)
+processor 21 old comm time: 1.685000 s)
+processor 28 old comm time: 1.715000 s)
+processor 25 throughput: 0.095064 GB/sec
+processor 29 old comm time: 1.720000 s)
+processor 2 sendrecv time: 14.120782 s
+processor 20 old comm time: 1.686000 s)
+processor 21 comm time: 1.684950 s)
+processor 8 throughput: 0.100119 GB/sec
+processor 13 sendrecv time: 10.513516 s
+processor 16 throughput: 0.087015 GB/sec
+processor 21 sendrecv time: 12.079495 s
+processor 14 old comm time: 1.683000 s)
+processor 21 throughput: 0.103798 GB/sec
+processor 29 comm time: 1.720059 s)
+processor 12 sendrecv time: 11.087000 s
+processor 24 sendrecv time: 12.764896 s
+processor 13 throughput: 0.123534 GB/sec
+processor 18 old comm time: 1.718000 s)
+processor 29 sendrecv time: 13.494870 s
+processor 28 comm time: 1.714780 s)
+processor 29 throughput: 0.084811 GB/sec
+processor 24 throughput: 0.105553 GB/sec
+processor 10 comm time: 1.683443 s)
+processor 20 comm time: 1.685355 s)
+processor 2 throughput: 0.041668 GB/sec
+processor 12 throughput: 0.117687 GB/sec
+processor 14 comm time: 1.683087 s)
+processor 4 comm time: 1.673120 s)
+processor 18 comm time: 1.718001 s)
+processor 28 sendrecv time: 13.140175 s
+processor 26 old comm time: 1.694000 s)
+processor 20 sendrecv time: 11.812281 s
+processor 6 comm time: 1.685643 s)
+processor 28 throughput: 0.092387 GB/sec
+processor 18 sendrecv time: 12.619524 s
+processor 20 throughput: 0.106132 GB/sec
+processor 10 sendrecv time: 11.210292 s
+processor 4 sendrecv time: 13.578410 sprocessor 30 old comm time: 1.690000 s)
+
+processor 18 throughput: 0.100897 GB/sec
+processor 4 throughput: 0.046284 GB/sec
+processor 26 comm time: 1.694523 s)
+processor 22 old comm time: 1.711000 s)
+processor 10 throughput: 0.117077 GB/sec
+processor 26 sendrecv time: 13.236802 s
+processor 6 sendrecv time: 13.435403 s
+processor 14 sendrecv time: 11.772883 s
+processor 26 throughput: 0.093688 GB/sec
+processor 22 comm time: 1.710271 s)
+processor 6 throughput: 0.046545 GB/sec
+processor 30 comm time: 1.690194 s)
+processor 22 sendrecv time: 12.339699 s
+processor 14 throughput: 0.110013 GB/sec
+processor 30 sendrecv time: 12.534270 s
+processor 22 throughput: 0.103521 GB/sec
+processor 30 throughput: 0.085813 GB/sec
+model update ...
+compute (gflops, time)(0.11097788,0.827)
+communicate model ...
+processor 16 old comm time: 3.477000 s)
+processor 15 old comm time: 3.448000 s)
+processor 31 old comm time: 3.463000 s)
+processor 5 old comm time: 3.459000 s)
+processor 19 old comm time: 3.438000 s)
+processor 7 old comm time: 3.482000 s)
+processor 23 old comm time: 3.480000 s)
+processor 0 old comm time: 3.439000 s)
+processor 15 comm time: 3.448665 s)
+processor 31 comm time: 3.462990 s)
+processor 17 old comm time: 3.479000 s)
+processor 3 old comm time: 3.441000 s)
+processor 3 comm time: 3.440792 s)
+processor 0 comm time: 3.438680 s)
+processor 31 sendrecv time: 16.212521 s
+processor 1 old comm time: 3.472000 s)
+processor 1 comm time: 3.471937 s)processor 7 comm time: 3.482156 s)
+processor 2 old comm time: 3.449000 s)
+processor 15 sendrecv time: 15.241071 s
+processor 31 throughput: 0.068582 GB/sec
+
+processor 3 sendrecv time: 16.836843 s
+processor 3 throughput: 0.043884 GB/sec
+processor 23 comm time: 3.479853 s)
+processor 4 old comm time: 3.449000 s)
+processor 17 comm time: 3.479539 s)
+processor 27 old comm time: 3.476000 s)
+processor 7 sendrecv time: 15.591091 s
+processor 15 throughput: 0.098051 GB/sec
+processor 1 sendrecv time: 18.138056 s
+processor 19 comm time: 3.438179 s)
+processor 23 sendrecv time: 15.993593 s
+processor 8 old comm time: 3.424000 s)
+processor 11 old comm time: 3.481000 s)
+processor 7 throughput: 0.083160 GB/sec
+processor 16 comm time: 3.476835 s)
+processor 9 old comm time: 3.445000 s)
+processor 9 comm time: 3.444829 s)
+processor 0 sendrecv time: 18.038908 s
+processor 0 throughput: 0.039443 GB/sec
+processor 17 sendrecv time: 15.541592 s
+processor 19 sendrecv time: 14.759565 s
+processor 23 throughput: 0.096559 GB/sec
+processor 25 old comm time: 3.484000 s)
+processor 11 comm time: 3.481313 s)
+processor 11 sendrecv time: 14.431243 s
+processor 18 old comm time: 3.486000 s)
+processor 20 old comm time: 3.431000 s)
+processor 1 throughput: 0.037207 GB/sec
+processor 19 throughput: 0.101672 GB/sec
+processor 5 comm time: 3.459684 s)
+processor 5 sendrecv time: 16.918400 s
+processor 5 throughput: 0.042991 GB/sec
+processor 27 comm time: 3.476108 s)
+processor 24 old comm time: 3.477000 s)
+processor 16 sendrecv time: 15.984960 s
+processor 25 comm time: 3.483557 s)
+processor 27 sendrecv time: 16.380199 s
+processor 17 throughput: 0.090184 GB/sec
+processor 11 throughput: 0.107277 GB/sec
+processor 6 old comm time: 3.454000 s)
+processor 20 comm time: 3.430887 s)
+processor 9 sendrecv time: 14.730449 s
+processor 27 throughput: 0.086750 GB/sec
+processor 21 old comm time: 3.443000 s)
+processor 8 comm time: 3.423301 s)
+processor 13 old comm time: 3.456000 s)
+processor 16 throughput: 0.081807 GB/sec
+processor 25 sendrecv time: 16.230858 s
+processor 18 comm time: 3.485406 s)
+processor 12 old comm time: 3.446000 s)
+processor 21 comm time: 3.442853 s)
+processor 24 comm time: 3.476762 s)
+processor 25 throughput: 0.090069 GB/sec
+processor 10 old comm time: 3.442000 s)
+processor 29 old comm time: 3.483000 s)
+processor 28 old comm time: 3.480000 s)
+processor 9 throughput: 0.098965 GB/sec
+processor 21 sendrecv time: 15.037294 s
+processor 8 sendrecv time: 15.366028 s
+processor 2 comm time: 3.449584 s)
+processor 2 sendrecv time: 17.380669 s
+processor 13 comm time: 3.456398 s)processor 4 comm time: 3.448915 s)
+processor 21 throughput: 0.097278 GB/sec
+processor 24 sendrecv time: 15.747293 s
+
+processor 22 old comm time: 3.479000 s)
+processor 29 comm time: 3.483115 s)
+processor 13 sendrecv time: 13.429137 s
+processor 12 comm time: 3.445634 s)
+processor 29 sendrecv time: 16.578968 s
+processor 13 throughput: 0.112833 GB/sec
+processor 8 throughput: 0.094313 GB/sec
+processor 24 throughput: 0.099823 GB/sec
+processor 29 throughput: 0.080540 GB/sec
+processor 18 sendrecv time: 15.667502 s
+processor 28 comm time: 3.480245 s)
+processor 26 old comm time: 3.441000 s)
+processor 20 sendrecv time: 14.723224 s
+processor 2 throughput: 0.039495 GB/sec
+processor 28 sendrecv time: 15.118070 s
+processor 18 throughput: 0.094813 GB/sec
+processor 12 sendrecv time: 14.043921 s
+processor 10 comm time: 3.441451 s)
+processor 20 throughput: 0.099340 GB/sec
+processor 6 comm time: 3.454500 s)
+processor 28 throughput: 0.093683 GB/sec
+processor 22 comm time: 3.478367 s)
+processor 12 throughput: 0.108393 GB/sec
+processor 10 sendrecv time: 14.159507 s
+processor 4 sendrecv time: 16.757895 s
+processor 26 comm time: 3.441819 s)
+processor 4 throughput: 0.043753 GB/sec
+processor 6 sendrecv time: 16.650370 s
+processor 26 sendrecv time: 16.250534 s
+processor 14 old comm time: 3.462000 s)
+processor 10 throughput: 0.108140 GB/sec
+processor 30 old comm time: 3.455000 s)
+processor 26 throughput: 0.089032 GB/sec
+processor 22 sendrecv time: 15.341371 s
+processor 14 comm time: 3.461920 s)
+processor 6 throughput: 0.043817 GB/sec
+processor 30 comm time: 3.455307 s)
+processor 22 throughput: 0.097143 GB/sec
+processor 14 sendrecv time: 14.761014 s
+processor 30 sendrecv time: 15.552078 s
+processor 14 throughput: 0.102367 GB/sec
+processor 30 throughput: 0.080688 GB/sec
+model update ...
+compute (gflops, time)(0.11219891,0.818)
+communicate model ...
+processor 15 old comm time: 1.795000 s)
+processor 31 old comm time: 3.063000 s)
+processor 7 old comm time: 3.048000 s)
+processor 0 old comm time: 3.045000 s)
+processor 15 comm time: 1.794594 s)
+processor 31 comm time: 3.062955 s)
+processor 1 old comm time: 3.046000 s)
+processor 11 old comm time: 3.036000 s)
+processor 7 comm time: 3.047200 s)
+processor 4 old comm time: 3.026000 s)
+processor 15 sendrecv time: 16.517971 s
+processor 31 sendrecv time: 18.878353 s
+processor 5 old comm time: 3.033000 s)
+processor 3 old comm time: 3.064000 s)
+processor 23 old comm time: 3.070000 s)
+processor 8 old comm time: 3.029000 s)
+processor 15 throughput: 0.103395 GB/sec
+processor 31 throughput: 0.067311 GB/sec
+processor 9 old comm time: 3.060000 s)
+processor 3 comm time: 3.064116 s)
+processor 3 sendrecv time: 19.605314 s
+processor 23 comm time: 3.070236 s)
+processor 11 comm time: 3.035975 s)
+processor 7 sendrecv time: 18.191505 s
+processor 16 old comm time: 3.040000 s)
+processor 1 comm time: 3.045456 s)
+processor 0 comm time: 3.044645 s)
+processor 0 sendrecv time: 20.880033 s
+processor 0 throughput: 0.038944 GB/sec
+processor 1 sendrecv time: 20.982143 s
+processor 19 old comm time: 3.072000 s)
+processor 7 throughput: 0.081455 GB/sec
+processor 2 old comm time: 3.033000 s)
+processor 9 comm time: 3.059415 s)
+processor 3 throughput: 0.043071 GB/sec
+processor 23 sendrecv time: 18.581886 s
+processor 27 old comm time: 3.055000 s)
+processor 23 throughput: 0.094982 GB/sec
+processor 6 old comm time: 3.038000 s)
+processor 17 old comm time: 3.057000 s)
+processor 12 old comm time: 3.031000 s)
+processor 1 throughput: 0.036759 GB/sec
+processor 19 comm time: 3.072249 s)
+processor 8 comm time: 3.028773 s)
+processor 13 old comm time: 3.041000 s)
+processor 11 sendrecv time: 16.949116 s
+processor 11 throughput: 0.104389 GB/sec
+processor 16 comm time: 3.040031 s)
+processor 9 sendrecv time: 17.312037 s
+processor 19 sendrecv time: 17.361519 s
+processor 12 comm time: 3.030118 s)
+processor 17 comm time: 3.056677 s)
+processor 19 throughput: 0.098782 GB/sec
+processor 24 old comm time: 3.048000 s)
+processor 5 comm time: 3.032157 s)
+processor 5 sendrecv time: 19.701050 s
+processor 5 throughput: 0.042192 GB/sec
+processor 27 comm time: 3.054178 s)
+processor 16 sendrecv time: 18.654373 s
+processor 25 old comm time: 3.061000 s)
+processor 27 sendrecv time: 19.000481 s
+processor 17 sendrecv time: 18.154678 s
+processor 27 throughput: 0.085470 GB/sec
+processor 10 old comm time: 3.041000 s)
+processor 2 comm time: 3.033926 s)
+processor 13 comm time: 3.040973 s)
+processor 20 old comm time: 3.034000 s)
+processor 25 comm time: 3.061224 s)
+processor 17 throughput: 0.088233 GB/sec
+processor 8 sendrecv time: 17.907547 s
+processor 16 throughput: 0.080115 GB/sec
+processor 21 old comm time: 3.049000 s)
+processor 2 sendrecv time: 20.178568 s
+processor 2 throughput: 0.038879 GB/secprocessor 9 throughput: 0.096237 GB/sec
+processor 28 old comm time: 3.043000 s)
+processor 29 old comm time: 3.075000 s)
+processor 24 comm time: 3.048322 s)
+processor 25 sendrecv time: 18.848198 s
+processor 14 old comm time: 3.027000 s)
+processor 21 comm time: 3.049161 s)
+processor 28 comm time: 3.042845 s)
+processor 25 throughput: 0.088642 GB/sec
+processor 8 throughput: 0.092488 GB/sec
+processor 13 sendrecv time: 15.937144 s
+processor 18 old comm time: 3.046000 s)
+processor 21 sendrecv time: 17.598585 s
+processor 12 sendrecv time: 16.590654 s
+processor 21 throughput: 0.094994 GB/sec
+processor 29 comm time: 3.074754 s)
+processor 24 sendrecv time: 18.292397 s
+processor 10 comm time: 3.041688 s)
+processor 13 throughput: 0.108659 GB/sec
+processor 20 comm time: 3.034142 s)
+processor 29 sendrecv time: 19.226070 s
+processor 24 throughput: 0.098210 GB/sec
+processor 29 throughput: 0.079372 GB/sec
+
+processor 12 throughput: 0.104862 GB/sec
+processor 6 comm time: 3.037912 s)
+processor 28 sendrecv time: 17.611200 s
+processor 18 comm time: 3.045921 s)
+processor 4 comm time: 3.026689 s)
+processor 26 old comm time: 2.356000 s)
+processor 20 sendrecv time: 17.232531 s
+processor 14 comm time: 3.027360 s)
+processor 28 throughput: 0.091909 GB/sec
+processor 18 sendrecv time: 18.272629 s
+processor 20 throughput: 0.097000 GB/sec
+processor 10 sendrecv time: 16.710402 s
+processor 4 sendrecv time: 19.478725 s
+processor 6 sendrecv time: 19.440231 s
+processor 4 throughput: 0.043019 GB/sec
+processor 18 throughput: 0.092910 GB/sec
+processor 10 throughput: 0.104722 GB/sec
+processor 26 comm time: 2.355202 s)
+processor 30 old comm time: 3.068000 s)
+processor 22 old comm time: 3.055000 s)
+processor 26 sendrecv time: 18.113398 s
+processor 30 comm time: 3.068096 s)
+processor 26 throughput: 0.091286 GB/sec
+processor 22 comm time: 3.054667 s)
+processor 6 throughput: 0.042890 GB/sec
+processor 14 sendrecv time: 17.321678 s
+processor 14 throughput: 0.099696 GB/sec
+processor 22 sendrecv time: 17.914917 s
+processor 30 sendrecv time: 18.144333 s
+processor 22 throughput: 0.095073 GB/sec
+processor 30 throughput: 0.079041 GB/sec
+model update ...
+compute (gflops, time)(0.11302797,0.812)
+communicate model ...
+processor 15 old comm time: 1.735000 s)
+processor 31 old comm time: 1.772000 s)
+processor 7 old comm time: 1.738000 s)
+processor 15 comm time: 1.735058 s)
+processor 31 comm time: 1.771548 s)processor 11 old comm time: 1.759000 s)
+processor 7 comm time: 1.738302 s)
+processor 0 old comm time: 1.747000 s)
+processor 15 sendrecv time: 17.692846 s
+
+processor 1 old comm time: 1.728000 s)
+processor 3 old comm time: 1.742000 s)
+processor 23 old comm time: 1.757000 s)
+processor 31 sendrecv time: 20.255896 s
+processor 5 old comm time: 1.728000 s)
+processor 11 comm time: 1.758371 s)
+processor 7 sendrecv time: 19.458908 s
+processor 2 old comm time: 1.721000 s)
+processor 9 old comm time: 1.733000 s)
+processor 19 old comm time: 1.772000 s)
+processor 23 comm time: 1.757566 s)
+processor 12 old comm time: 1.734000 s)
+processor 15 throughput: 0.108596 GB/sec
+processor 31 throughput: 0.070575 GB/sec
+processor 23 sendrecv time: 19.862665 s
+processor 8 old comm time: 1.753000 s)
+processor 1 comm time: 1.728118 s)
+processor 3 comm time: 1.742614 s)
+processor 3 sendrecv time: 21.050051 s
+processor 3 throughput: 0.045129 GB/sec
+processor 0 comm time: 1.747547 s)
+processor 0 sendrecv time: 22.426144 s
+processor 25 old comm time: 1.744000 s)
+processor 27 old comm time: 1.753000 s)
+processor 7 throughput: 0.085668 GB/sec
+processor 19 comm time: 1.772387 s)
+processor 23 throughput: 0.099965 GB/sec
+processor 0 throughput: 0.040791 GB/sec
+processor 17 old comm time: 1.685000 s)
+processor 2 comm time: 1.720619 s)
+processor 1 sendrecv time: 22.509014 s
+processor 11 sendrecv time: 18.188133 s
+processor 11 throughput: 0.109438 GB/sec
+processor 4 old comm time: 1.730000 s)
+processor 5 comm time: 1.727774 s)
+processor 19 sendrecv time: 18.663404 s
+processor 8 comm time: 1.753251 s)
+processor 9 comm time: 1.732446 s)
+processor 9 sendrecv time: 18.569517 sprocessor 19 throughput: 0.103378 GB/sec
+processor 27 comm time: 1.752451 s)
+processor 16 old comm time: 1.747000 s)
+processor 17 comm time: 1.684881 s)
+processor 1 throughput: 0.038548 GB/sec
+processor 27 sendrecv time: 20.321075 s
+processor 6 old comm time: 1.766000 s)
+processor 27 throughput: 0.089905 GB/sec
+processor 12 comm time: 1.734035 s)
+processor 13 old comm time: 1.746000 s)
+processor 8 sendrecv time: 19.197302 s
+processor 25 comm time: 1.743493 s)
+
+processor 9 throughput: 0.100935 GB/sec
+processor 16 comm time: 1.746949 s)
+processor 17 sendrecv time: 19.395199 s
+processor 10 old comm time: 1.739000 s)
+processor 25 sendrecv time: 20.145966 s
+processor 28 old comm time: 1.766000 s)
+processor 24 old comm time: 1.762000 s)
+processor 17 throughput: 0.092913 GB/sec
+processor 16 sendrecv time: 20.030067 s
+processor 13 comm time: 1.745502 s)
+processor 25 throughput: 0.093298 GB/sec
+processor 14 old comm time: 1.740000 s)
+processor 20 old comm time: 1.739000 s)
+processor 21 old comm time: 1.764000 s)
+processor 24 comm time: 1.761342 s)
+processor 5 sendrecv time: 21.180294 s
+processor 5 throughput: 0.044151 GB/sec
+processor 29 old comm time: 1.774000 s)
+processor 16 throughput: 0.083939 GB/sec
+processor 12 sendrecv time: 17.837328 s
+processor 21 comm time: 1.763719 s)
+processor 8 throughput: 0.097059 GB/sec
+processor 29 comm time: 1.774074 s)
+processor 18 old comm time: 1.780000 s)
+processor 21 sendrecv time: 18.874720 s
+processor 13 sendrecv time: 17.148611 s
+processor 10 comm time: 1.738248 s)
+processor 28 comm time: 1.765802 s)
+processor 21 throughput: 0.099643 GB/sec
+processor 13 throughput: 0.113605 GB/sec
+processor 29 sendrecv time: 20.576056 s
+processor 29 throughput: 0.083435 GB/sec
+processor 24 sendrecv time: 19.549469 s
+processor 4 comm time: 1.729154 s)
+processor 24 throughput: 0.103382 GB/sec
+processor 2 sendrecv time: 21.665073 s
+processor 2 throughput: 0.040738 GB/sec
+processor 6 comm time: 1.765244 s)
+processor 20 comm time: 1.739189 s)
+processor 18 comm time: 1.780190 s)
+processor 12 throughput: 0.109725 GB/sec
+processor 26 old comm time: 1.758000 s)
+processor 28 sendrecv time: 18.828413 s
+processor 10 sendrecv time: 17.958616 s
+processor 28 throughput: 0.096714 GB/sec
+processor 30 old comm time: 1.768000 s)
+processor 20 sendrecv time: 18.448980 s
+processor 18 sendrecv time: 19.614138 s
+processor 20 throughput: 0.101930 GB/sec
+processor 18 throughput: 0.097374 GB/sec
+processor 4 sendrecv time: 20.905571 s
+processor 10 throughput: 0.109624 GB/sec
+processor 4 throughput: 0.045093 GB/sec
+processor 22 old comm time: 1.768000 s)
+processor 26 comm time: 1.757768 s)
+processor 6 sendrecv time: 20.958796 s
+processor 26 sendrecv time: 19.379320 s
+processor 14 comm time: 1.739793 s)
+processor 22 comm time: 1.768113 s)
+processor 26 throughput: 0.095988 GB/sec
+processor 6 throughput: 0.044755 GB/sec
+processor 14 sendrecv time: 18.593796 s
+processor 22 sendrecv time: 19.202576 s
+processor 30 comm time: 1.767998 s)
+processor 14 throughput: 0.104484 GB/sec
+processor 30 sendrecv time: 19.447500 s
+processor 22 throughput: 0.099784 GB/sec
+processor 30 throughput: 0.082962 GB/sec
+model update ...
+compute (gflops, time)(0.11401082,0.805)
+communicate model ...
+processor 15 old comm time: 18.399000 s)
+processor 31 old comm time: 18.416000 s)
+processor 7 old comm time: 18.419001 s)
+processor 3 old comm time: 18.413000 s)
+processor 7 comm time: 18.419659 s)
+processor 15 comm time: 18.399153 s)
+processor 31 comm time: 18.416380 s)
+processor 23 old comm time: 18.431000 s)
+processor 0 old comm time: 18.417000 s)
+processor 31 sendrecv time: 38.284599 s
+processor 1 old comm time: 18.413000 s)
+processor 12 old comm time: 18.399000 s)
+processor 15 sendrecv time: 35.561848 s
+processor 31 throughput: 0.041490 GB/sec
+processor 1 comm time: 18.412426 s)
+processor 11 old comm time: 18.405001 s)
+processor 7 sendrecv time: 37.430923 s
+processor 8 old comm time: 18.415001 s)
+processor 5 old comm time: 18.427999 s)
+processor 23 comm time: 18.431021 s)
+processor 9 old comm time: 18.421000 s)
+processor 7 throughput: 0.049484 GB/sec
+processor 16 old comm time: 18.429001 s)
+processor 15 throughput: 0.060032 GB/sec
+processor 0 comm time: 18.417105 s)
+processor 0 sendrecv time: 40.649998 s
+processor 25 old comm time: 18.392000 s)
+processor 11 comm time: 18.404821 s)
+processor 23 sendrecv time: 37.820454 s
+processor 2 old comm time: 18.414000 s)
+processor 17 old comm time: 18.399000 s)
+processor 23 throughput: -0.055229 GB/sec
+processor 1 sendrecv time: 40.727806 s
+processor 0 throughput: 0.025004 GB/sec
+processor 5 comm time: 18.427784 s)
+processor 19 old comm time: 18.426001 s)
+processor 2 comm time: 18.413553 s)
+processor 13 old comm time: 18.413000 s)
+processor 3 comm time: 18.412777 s)
+processor 3 sendrecv time: 39.173901 s
+processor 3 throughput: 0.026945 GB/sec
+processor 4 old comm time: 18.393999 s)
+processor 9 comm time: 18.421745 s)
+processor 9 sendrecv time: 36.515984 s
+processor 27 old comm time: 18.400999 s)
+processor 8 comm time: 18.414640 s)
+processor 17 comm time: 18.398846 s)
+processor 19 comm time: 18.426600 s)
+processor 16 comm time: 18.428682 s)
+processor 1 throughput: 0.023672 GB/sec
+processor 11 sendrecv time: 36.075603 s
+processor 25 comm time: 18.392075 s)
+processor 19 sendrecv time: 36.621254 s
+processor 6 old comm time: 18.410000 s)
+processor 12 comm time: 18.399025 s)
+processor 17 sendrecv time: 37.354141 s
+processor 27 comm time: 18.400728 s)
+processor 24 old comm time: 2.457000 s)
+processor 5 sendrecv time: 39.358074 s
+processor 5 throughput: 0.026400 GB/sec
+processor 19 throughput: 0.058539 GB/sec
+processor 16 sendrecv time: 38.089817 s
+processor 13 comm time: 18.413080 s)
+processor 11 throughput: -0.057749 GB/sec
+processor 20 old comm time: 18.427999 s)
+processor 9 throughput: 0.057032 GB/sec
+processor 27 sendrecv time: 37.704369 s
+processor 17 throughput: 0.053603 GB/sec
+processor 27 throughput: 0.053839 GB/sec
+processor 8 sendrecv time: 37.149803 s
+processor 16 throughput: 0.049045 GB/sec
+processor 21 old comm time: 18.400999 s)
+processor 25 sendrecv time: 38.102108 s
+processor 10 old comm time: 18.414000 s)
+processor 10 comm time: 18.414057 s)
+processor 29 old comm time: 18.426001 s)
+processor 25 throughput: 0.054811 GB/sec
+processor 28 old comm time: 18.441000 s)
+processor 24 comm time: 2.457080 s)
+processor 21 comm time: 18.400646 s)
+processor 13 sendrecv time: 35.025688 s
+processor 2 sendrecv time: 39.852577 s
+processor 21 sendrecv time: 36.786892 s
+processor 12 sendrecv time: 35.750118 s
+processor 29 comm time: 18.426052 s)
+processor 8 throughput: 0.055728 GB/sec
+processor 14 old comm time: 18.400999 s)
+processor 21 throughput: 0.056806 GB/sec
+processor 20 comm time: 18.427593 s)
+processor 13 throughput: -0.060822 GB/sec
+processor 24 sendrecv time: 21.461912 s
+processor 29 sendrecv time: 38.582600 s
+processor 18 old comm time: 17.737000 s)
+processor 29 throughput: 0.049440 GB/sec
+processor 28 comm time: 18.441029 s)
+processor 24 throughput: -0.095488 GB/sec
+processor 18 comm time: 17.736597 s)
+processor 28 sendrecv time: 36.722683 s
+processor 4 comm time: 18.393885 s)
+processor 26 old comm time: 18.419001 s)
+processor 2 throughput: 0.024607 GB/sec
+processor 12 throughput: -0.059309 GB/sec
+processor 6 comm time: 18.409548 s)
+processor 28 throughput: 0.055097 GB/sec
+processor 14 comm time: 18.400969 s)
+processor 20 sendrecv time: 36.355129 s
+processor 18 sendrecv time: 36.877354 s
+processor 20 throughput: 0.057473 GB/sec
+processor 10 sendrecv time: 35.883358 sprocessor 4 sendrecv time: 38.999668 s
+processor 18 throughput: 0.057546 GB/sec
+processor 4 throughput: 0.026858 GB/sec
+
+processor 30 old comm time: 18.391001 s)
+processor 6 sendrecv time: 39.120033 s
+processor 26 comm time: 18.419237 s)
+processor 14 sendrecv time: 36.528606 s
+processor 10 throughput: -0.058733 GB/sec
+processor 30 comm time: 18.390350 s)
+processor 26 sendrecv time: 37.300068 s
+processor 22 old comm time: 18.431000 s)
+processor 26 throughput: 0.055412 GB/sec
+processor 6 throughput: 0.026642 GB/sec
+processor 14 throughput: -0.058484 GB/sec
+processor 22 comm time: 18.431793 s)
+processor 30 sendrecv time: 37.375782 s
+processor 30 throughput: 0.047964 GB/sec
+processor 22 sendrecv time: 37.137390 s
+processor 22 throughput: 0.057328 GB/sec
+terminating ...
