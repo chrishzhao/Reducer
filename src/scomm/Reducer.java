@@ -10,8 +10,8 @@ import mpi.MPIException;
 
 public class Reducer {
 	
-	int rank;
-	int size;
+	public int rank;
+	public int size;
 	
 	// size of model
 	int modelSize;
@@ -285,7 +285,7 @@ public class Reducer {
 			gatherConfig( sendBuffer, sendCounts, sendDispls, l);
 			
 			for( int i = 0; i < k; i++){
-				for( int vid: gatherOrigin[ k * l + i]){
+				for( int vid: gatherDest[ k * l + i]){
 					gatherBuffer.put( vid, 0f );
 				}
 			}
