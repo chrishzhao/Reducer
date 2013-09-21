@@ -21,17 +21,28 @@ public class Reducer {
 	int d;
 	
 	// keep track of scatter/gather vertices, of dimension k*d
+	
+	// scatterDest[l*k + i] stores the vertex id to send at the ith round scatter communication at level l, 
+	//the ith round communication send to machine getRight(i, l);
 	private LinkedList<Integer> [] scatterDest;
+	// scatterOrigin[l*k + i] stores the vertex id to receive at the ith round scatter communication at level l, 
+	//the ith round communication receive from machine getLeft(i, l);
 	private LinkedList<Integer> [] scatterOrigin;
+	// gatherDest[l*k + i] stores the vertex id to send at the ith round gather communication at level l, 
+	//the ith round communication send to machine getRight(i, l);
 	private LinkedList<Integer> [] gatherDest;
+	// gatherOrigin[l*k + i] stores the vertex id to receive at the ith round gather communication at level l, 
+	//the ith round communication receive from machine getLeft(i, l);
 	private LinkedList<Integer> [] gatherOrigin;	
 	
 	// internal buffers
+	// a union of scatter origins (including from itself i.e. outbound vertices)
 	private Map<Integer, Float> scatterBuffer;
+	// a union of gather origins (including to itself i.e. host vertices)
 	private Map<Integer, Float> gatherBuffer;
 	private Map<Integer, Float> hostBuffer;
 	
-	// vid -> index map
+	// vid -> buffer index map
 	private Map<Integer, Integer> outboundMap;
 	private Map<Integer, Integer> inboundMap;
 	
@@ -88,11 +99,13 @@ public class Reducer {
 		return vid/hostSize;
 	}
 	
+	// scatter destination at level "level" for vertex hosted by "host"
+	// return -1 if don't need to scatter
 	public int getScatterDest( int host, int level){
 		
 		for( int dest = 0; dest < k; dest ++){
 			int right = getRight(dest, level);
-			if((right % Math.pow(k, level+1)) == (host % Math.pow(k, level+1))){
+			if((right % (int)Math.pow(k, level+1)) == (host % (int)Math.pow(k, level+1))){
 				return dest;
 			}
 		}
@@ -262,6 +275,9 @@ public class Reducer {
 				for( int vid: scatterOrigin[ k * l + i]){
 					scatterBuffer.put( vid, 0f );
 				}
+				for( int vid: scatterDest[ k * l + i]){
+					scatterBuffer.put( vid, 0f );
+				}
 			}
 			
 		}
@@ -285,6 +301,9 @@ public class Reducer {
 			gatherConfig( sendBuffer, sendCounts, sendDispls, l);
 			
 			for( int i = 0; i < k; i++){
+				for( int vid: gatherOrigin[ k * l + i]){
+					gatherBuffer.put( vid, 0f );
+				}
 				for( int vid: gatherDest[ k * l + i]){
 					gatherBuffer.put( vid, 0f );
 				}
@@ -359,18 +378,18 @@ public class Reducer {
 		}
 		
 		// set inboundvalues
-		if(rank==8){
-		for(int s = 0; s<d; s++){
-			for(int i=0; i<k; i++){
+		//if(rank==8){
+		//for(int s = 0; s<d; s++){
+		//	for(int i=0; i<k; i++){
 
-			System.out.println(String.format("l: %d, i: %d", s, i));
-			for(int vid:gatherOrigin[k*s + i] ){
-				System.out.print(String.format("%d ", vid));
-			}
-			}
-		}}
+		//	System.out.println(String.format("l: %d, i: %d", s, i));
+		//	for(int vid:gatherOrigin[k*s + i] ){
+		//		System.out.print(String.format("%d ", vid));
+		//	}
+		//	}
+		//}}
 		for( int vid: gatherBuffer.keySet() ){
-			if(rank==8){System.out.println(String.format("vid: %d, val: %f", vid, gatherBuffer.get(vid)));}
+			//if(rank==8){System.out.println(String.format("vid: %d, val: %f", vid, gatherBuffer.get(vid)));}
 			if(inboundMap.containsKey(vid)){
 				inboundValues[inboundMap.get(vid)] = gatherBuffer.get(vid);
 			}
