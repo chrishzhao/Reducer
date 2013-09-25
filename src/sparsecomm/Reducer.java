@@ -18,19 +18,24 @@ public class Reducer {
 	int modelSize;
 	
 	// k-ary d-fly butterfly network
-	int k;
+	// int k;
+	// int d;
+	
+	// for heterogeneous k. ks and kneighbours
+	int[] kk;
+	int[][] kN;
 	int d;
 	
+	// configurations
 	private LinkedList<IVec> scheduleVertexSets;
 	private LinkedList<IVec> maps;
 	
-	//
+	// vertex set
 	private IVec scatterVertexSet;
 	private IVec gatherVertexSet;
-	
+		
+	// internal buffer
 	private float[] internalBuffer;
-	
-	// internal buffers
 	
 	// benchmarks
 	private long commTime = 0;
@@ -43,14 +48,43 @@ public class Reducer {
 	private long packingTime = 0;
 	private long barrierTime = 0;
 	
+	private long configMergeTime = 0;
+	private long configPartTime = 0;
+	private long configCommTime = 0;
+	
 	public Reducer( String[] args ) throws MPIException{
 		
 		MPI.Init(args);
 		rank = MPI.COMM_WORLD.Rank();
 		size = MPI.COMM_WORLD.Size();
 		modelSize = Integer.parseInt(args[0]);
-		k = Integer.parseInt(args[1]);
-		d = Integer.parseInt(args[2]);
+		
+		//k-ary d-fly butterfly network
+		//k = Integer.parseInt(args[1]);
+		//d = Integer.parseInt(args[2]);
+		
+		// for heterogeneous k
+		d = args.length - 1;
+		
+		kk = new int[d];
+		
+		int maxk = 0;
+		for(int i=0; i<d; i++){
+			kk[i] = Integer.parseInt(args[1+d]);
+			if(kk[i]>maxk){ maxk = kk[i]; }
+		}
+		
+		kN = new int[d][maxk];
+		for(int i=0; i<d; i++){
+			int intv = 1;
+			for(int j=0; j<kk[i]; j++){
+				int pos = (rank + intv*j) % (intv*kk[i]);
+				intv = intv*kk[i];
+				
+				int init = (rank/intv)*intv;
+				kN[i][j] = init + pos;
+			}
+		}
 	}
 	
 		
@@ -59,6 +93,7 @@ public class Reducer {
 		maps = new LinkedList<IVec>();
 	}
 	
+	/*
 	public int getRight( int i, int level){
 		int intv = (int) Math.pow(k, level);
 		int pos = (rank + intv*i) % (k * intv);
@@ -67,38 +102,51 @@ public class Reducer {
 	}
 	
 	public int getLeft( int i, int level){
-		return getRight( k - i, level);
-	}
+		return getRight( kk[level] - i, level);
+	}*/
 	
 	public int getScatterOriginIndex(int i, int level){
 		// offset level
-		int offset = 2 * k * level;
+		int kl = 0;
+		for( int j=0; j<level; j++){kl += kk[j];}
+		int offset = 2 * kl;
 		// offset dest
-		offset += k;
+		offset += kk[level];
 		return offset + i;
 	}
 	
 	public int getScatterDestIndex(int i, int level){
-		int offset = 2 * k * level;
+		// offset level
+		int kl = 0;
+		for( int j=0; j<level; j++){kl += kk[j];}
+		int offset = 2 * kl;
 		return offset + i;
 	}
 	
 	public int getGatherOriginIndex(int i, int level){
 		// offset scatter
-		int offset = 2 * k * d;
+		int kd = 0;
+		for( int j=0; j<d; j++){kd += kk[j];}
+		int offset = 2 * kd;
 		// offset level
-		offset += 2 * k * level;
-		return offset + (k-i)%k;
+		int kl = 0;
+		for( int j=0; j<level; j++){kl += kk[j];}
+		offset += 2 * kl;
+		return offset + (kk[level]-i)%kk[level];
 	}
 	
 	public int getGatherDestIndex(int i, int level){
 		// offset scatter
-		int offset = 2 * k * d;
+		int kd = 0;
+		for( int j=0; j<d; j++){kd += kk[j];}
+		int offset = 2 * kd;
 		// offset level
-		offset += 2 * k * level;
+		int kl = 0;
+		for( int j=0; j<level; j++){kl += kk[j];}
+		offset += 2 * kl;
 		// offset origin
-		offset += k;
-		return offset + (k-i)%k;
+		offset += kk[level];
+		return offset + (kk[level]-i)%kk[level];
 	}
 	
 	public int getHost( int vid ){
@@ -147,7 +195,7 @@ public class Reducer {
 		int bufferPointer = 0;
 		long sTime = System.nanoTime();
 		
-		for (int i = 0; i<k; i++){
+		for (int i = 0; i<kk[level]; i++){
 			
 			int index = getScatterDestIndex(i,level);
 			int[] map = maps.get(index+1).data;
@@ -170,7 +218,7 @@ public class Reducer {
 		int bufferPointer = 0;
 		long sTime = System.nanoTime();
 		
-		for (int i = 0; i<k; i++){
+		for (int i = 0; i<kk[level]; i++){
 			
 			int index = getGatherDestIndex(i,level);
 			int[] map = maps.get(index+1).data;
@@ -195,6 +243,7 @@ public class Reducer {
 		// Arrays.sort(outboundIndices);
 		int[] outboundIndices = scatterVertexSet.data;
 
+		long sTime = System.nanoTime();
 		for( int i = 0; i < outboundIndices.length; i++ ){
 			int host = getHost(outboundIndices[i]);
 			int dest = getScatterDest(host, level);
@@ -202,13 +251,13 @@ public class Reducer {
 			if(dest >= 0){sendCounts[dest] += 1;}
 		}
 		
-		for( int i = 0; i <= k; i++){
+		for( int i = 0; i <= kk[level]; i++){
 			 for(int t = 0; t < i; t++){
 				 sendDispls[i] += sendCounts[t];
 			 }
 		}
 		
-		int[] pointers = new int[k];
+		int[] pointers = new int[kk[level]];
 		
 		for( int i = 0; i < outboundIndices.length; i++ ){
 			int host = getHost(outboundIndices[i]);
@@ -218,9 +267,10 @@ public class Reducer {
 				pointers[dest] += 1;
 			}
 		}
-		
+		long eTime = System.nanoTime();
+		configPartTime += eTime - sTime;
 		// add to scatter dest
-		for( int i = 0; i<k; i++){
+		for( int i = 0; i<kk[level]; i++){
 			int[] data = new int[sendCounts[i]]; 
 			for( int j = 0; j<sendCounts[i]; j++){
 				data[j] = sendBuffer[sendDispls[i] + j];
@@ -237,21 +287,22 @@ public class Reducer {
 		int[] inboundIndices = gatherVertexSet.data;
 		
 		// sorting according to host rank
-		Arrays.sort(inboundIndices);
-
+		//Arrays.sort(inboundIndices);
+		long sTime = System.nanoTime();
+		
 		for( int i = 0; i < inboundIndices.length; i++ ){
 			int host = getHost(inboundIndices[i]);
 			int dest = getGatherDest(host, level);
 			if(dest >= 0){sendCounts[dest] += 1;}
 		}
 		
-		for( int i = 0; i <= k; i++){
+		for( int i = 0; i <= kk[level]; i++){
 			 for(int t = 0; t < i; t++){
 				 sendDispls[i] += sendCounts[t];
 			 }
 		}
 		
-		int[] pointers = new int[k];
+		int[] pointers = new int[kk[level]];
 		
 		for( int i = 0; i < inboundIndices.length; i++ ){
 			int host = getHost(inboundIndices[i]);
@@ -262,8 +313,10 @@ public class Reducer {
 			}
 		}
 		
+		long eTime = System.nanoTime();
+		configPartTime += eTime - sTime;
 		// add to gather origin
-		for( int i = 0; i<k; i++){
+		for( int i = 0; i<kk[level]; i++){
 			int[] data = new int[sendCounts[i]]; 
 			for( int j = 0; j<sendCounts[i]; j++){
 				data[j] = sendBuffer[sendDispls[i] + j];
@@ -286,8 +339,8 @@ public class Reducer {
 			
 		//	if(rank == 10)System.out.println(String.format("rank: %d, l: %d", rank, l));
 			sendBuffer = new int[scatterVertexSet.size()];
-			sendCounts = new int[k];
-			sendDispls = new int[k + 1];
+			sendCounts = new int[kk[l]];
+			sendDispls = new int[kk[l] + 1];
 			
 			makeScatterConfigSendBuffer( sendBuffer, sendCounts, sendDispls, l);
 		
@@ -303,8 +356,8 @@ public class Reducer {
 		for( int l = 0; l<d; l++){
 			//if(rank == 10)System.out.println(String.format("rank: %d, l: %d", rank, l));
 			sendBuffer = new int[gatherVertexSet.size()];
-			sendCounts = new int[k];
-			sendDispls = new int[k + 1];
+			sendCounts = new int[kk[l]];
+			sendDispls = new int[kk[l] + 1];
 			
 			makeGatherConfigSendBuffer( sendBuffer, sendCounts, sendDispls, l);
 			//if(rank == 10){
@@ -320,10 +373,13 @@ public class Reducer {
 
 		}
 		
+		long sTime = System.nanoTime();
 		scheduleVertexSets.add(new IVec(outboundIndices));
 		scheduleVertexSets.add(new IVec(inboundIndices));
 		maps = IVec.mergeAndMap(scheduleVertexSets);
 		internalBuffer = new float[maps.get(0).size()];
+		long eTime = System.nanoTime();
+		configMergeTime += eTime - sTime;
 			
 	}
 	
@@ -339,7 +395,9 @@ public class Reducer {
 		barrierTime = 0;
 		
 		// get map for outbound vertices
-		int[] omap = maps.get(1 + 4 * k * d).data;
+		int kd = 0;
+		for( int j=0; j<d; j++){kd += kk[j];}
+		int[] omap = maps.get(1 + 4 * kd).data;
 		for(int j = 0; j<omap.length; j++){
 			internalBuffer[omap[j]] = outboundValues[j];
 		}
@@ -352,7 +410,7 @@ public class Reducer {
 		for( int l = 0; l<d; l++){
 			
 			int bufferSize = 0;
-			for(int i = 0; i < k; i++){
+			for(int i = 0; i < kk[l]; i++){
 				int index = getScatterDestIndex(i,l);
 				int[] vertices = scheduleVertexSets.get(index).data;
 				bufferSize += vertices.length;
@@ -361,8 +419,8 @@ public class Reducer {
 			//if(rank == 0){System.out.println(String.format("scatter level %d: bufferSize: %d", l, bufferSize));}
 			
 			sendBuffer = new float[bufferSize];
-			sendCounts = new int[k];
-			sendDispls = new int[k + 1];
+			sendCounts = new int[kk[l]];
+			sendDispls = new int[kk[l] + 1];
 			
 			long sTime = System.nanoTime();
 			makeScatterSendBuffer( sendBuffer, sendCounts, sendDispls, l);
@@ -381,7 +439,7 @@ public class Reducer {
 		for( int l = d-1; l>=0; l--){
 			
 			int bufferSize = 0;
-			for(int i = 0; i < k; i++){
+			for(int i = 0; i < kk[l]; i++){
 				int index = getGatherDestIndex(i,l);
 				int[] vertices = scheduleVertexSets.get(index).data;
 				bufferSize += vertices.length;
@@ -390,8 +448,8 @@ public class Reducer {
 			//if(rank == 0){System.out.println(String.format("gather level %d: bufferSize: %d", l, bufferSize));}
 			
 			sendBuffer = new float[bufferSize];
-			sendCounts = new int[k];
-			sendDispls = new int[k + 1];
+			sendCounts = new int[kk[l]];
+			sendDispls = new int[kk[l] + 1];
 			
 			long sTime = System.nanoTime();
 			makeGatherSendBuffer( sendBuffer, sendCounts, sendDispls, l);
@@ -406,7 +464,7 @@ public class Reducer {
 		}
 		
 		// get map for inbound vertices
-		int[] imap = maps.get(1 + 4 * k * d + 1).data;
+		int[] imap = maps.get(1 + 4 * kd + 1).data;
 		for(int j = 0; j<imap.length; j++){
 			inboundValues[j] = internalBuffer[imap[j]];
 		}
@@ -416,14 +474,15 @@ public class Reducer {
 	
 	public void scatterConfig( int[] sendBuffer, int[] sendCounts, int[] sendDispls, int level) throws MPIException{
 		
-		int [] recvCounts = new int[k];
+		int [] recvCounts = new int[kk[level]];
 		int [] recvBuffer;
 
-		for(int i = 0; i < k; i++){
+		for(int i = 0; i < kk[level]; i++){
 			
-			int right = getRight(i, level);
-			int left = getLeft(i, level);
+			int right = kN[level][i];
+			int left = kN[level][(kk[level]-i)%kk[level]];
 			
+			long sTime = System.nanoTime();
 		//	if(rank==10)System.out.println(String.format("right: %d, left: %d, i: %d level: %d", right, left, i, level));	
 			MPI.COMM_WORLD.Sendrecv(sendCounts, i, 1, MPI.INT, right, 0, recvCounts, i, 1, MPI.INT, left, 0);
 				
@@ -431,30 +490,40 @@ public class Reducer {
 		    //System.out.println(String.format("sc: %d, rc: %d, i: %d", sendCounts[i], recvCounts[i], i));	
 			MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.INT, right, 0, recvBuffer, 0, recvCounts[i], MPI.INT, left, 0);
 
+			long eTime = System.nanoTime();
+			configCommTime += eTime - sTime;
 			scheduleVertexSets.add(new IVec(recvBuffer)); 
 			scatterVertexSet = IVec.merge(scatterVertexSet, new IVec(recvBuffer));
-			
+			sTime = System.nanoTime();
+			configMergeTime += sTime - eTime;
 		}
 	}
 	
 	public void gatherConfig( int[] sendBuffer, int[] sendCounts, int[] sendDispls, int level) throws MPIException{
 		
-		int [] recvCounts = new int[k];
+		int [] recvCounts = new int[kk[level]];
 		int [] recvBuffer;		
 
-		for(int i = 0; i < k; i++){
+		for(int i = 0; i < kk[level]; i++){
 				
-			int right = getRight(i, level);
-			int left = getLeft(i, level);
+			int right = kN[level][i];
+			int left = kN[level][(kk[level]-i)%kk[level]];
 				
+			long sTime = System.nanoTime();
+			
 			MPI.COMM_WORLD.Sendrecv(sendCounts, i, 1, MPI.INT, right, 0, recvCounts, i, 1, MPI.INT, left, 0);
 					
 			recvBuffer = new int[recvCounts[i]];
 			//System.out.println(String.format("sc: %d, rc: %d, i: %d", sendCounts[i], recvCounts[i], i));	
 			MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.INT, right, 0, recvBuffer, 0, recvCounts[i], MPI.INT, left, 0);
 
+			long eTime = System.nanoTime();
+			configCommTime += eTime - sTime;
+			
 			scheduleVertexSets.add(new IVec(recvBuffer));
 			gatherVertexSet = IVec.merge(gatherVertexSet, new IVec(recvBuffer));
+			sTime = System.nanoTime();
+			configMergeTime += sTime - eTime;
 				
 			
 		}			
@@ -464,10 +533,10 @@ public class Reducer {
 		
 		float [] buffer;
 		
-		for(int i = 0; i < k; i++){
+		for(int i = 0; i < kk[level]; i++){
 			
-			int right =  getRight(i, level);
-			int left = getLeft(i, level);
+			int right =  kN[level][i];
+			int left = kN[level][(kk[level]-i)%kk[level]];
 			
 			int index = getScatterOriginIndex(i, level);
 			int[] map = maps.get(index+1).data;
@@ -500,10 +569,10 @@ public class Reducer {
 		
 		float [] recvBuffer;
 	
-		for(int i = 0; i < k; i++){
+		for(int i = 0; i < kk[level]; i++){
 				
-			int right =  getRight(i, level);
-			int left = getLeft(i, level);
+			int right =  kN[level][i];
+			int left = kN[level][(kk[level]-i)%kk[level]];
 						
 			int index = getGatherOriginIndex(i, level);
 			int[] map = maps.get(index+1).data;
@@ -566,6 +635,17 @@ public class Reducer {
 		return barrierTime/1000000000f;
 	}
 	
+	public float getConfigCommTime(){
+		return configCommTime/1000000000f;
+	}
+	
+	public float getConfigMergeTime(){
+		return configMergeTime/1000000000f;
+	}
+	
+	public float getConfigPartTime(){
+		return configPartTime/1000000000f;
+	}
 	public void terminate() throws MPIException{
 		MPI.Finalize();
 	}
