@@ -102,13 +102,19 @@ public class Reducer {
 				kN[l][i] = init + pos;
 				
 				int N = maxV - minV + 1;
-				parts[l][i] = minV + i*N/kk[l];
+				parts[l][i] = minV + i*(N/kk[l]);
 			}
 			parts[l][kk[l]] = maxV+1;
 			
 			minV = parts[l][bin];
 			maxV = parts[l][bin+1] - 1;
 			
+		}
+		
+		for(int l=0; l<d; l++){
+			for(int i=0; i<kk[l]; i++){
+				System.out.println(String.format("rank: %d, l: %d, i: %d, part: %d", rank, l, i, parts[l][i]));
+			}
 		}
 	}
 	
@@ -231,6 +237,7 @@ public class Reducer {
 				}
 			}
 			if(dest >= 0){sendCounts[dest] += 1;}
+			System.out.println(String.format("vid: %d, dest: %d", outboundIndices[i], dest));
 		}
 		
 		for( int i = 0; i <= kk[level]; i++){
@@ -559,7 +566,7 @@ public class Reducer {
 				MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.FLOAT, right, 0, buffer, 0, bufferCount, MPI.FLOAT, left, 0);
 				long eTime = System.nanoTime();
 				realCommTime += eTime - sTime;
-				System.out.println(String.format("scatter source: %d, dest: %d, level: %d, time: %f, size: %d", rank, right, level, (eTime-sTime)/1000000000f, sendCounts[i]));
+				//System.out.println(String.format("scatter source: %d, dest: %d, level: %d, time: %f, size: %d", rank, right, level, (eTime-sTime)/1000000000f, sendCounts[i]));
 	
 				for(int j = 0; j<bufferCount; j++){
 					internalBuffer[map[j]] += buffer[j];
@@ -595,7 +602,7 @@ public class Reducer {
 				MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.FLOAT, right, 0, recvBuffer, 0, bufferCount, MPI.FLOAT, left, 0);
 				long eTime = System.nanoTime();
 				realCommTime += eTime - sTime;
-				System.out.println(String.format("gather source: %d, dest: %d, level: %d, time: %f, size: %d", rank, right, level, (eTime-sTime)/1000000000f, sendCounts[i]));
+				//System.out.println(String.format("gather source: %d, dest: %d, level: %d, time: %f, size: %d", rank, right, level, (eTime-sTime)/1000000000f, sendCounts[i]));
 				//System.out.println(eTime-sTime);
 				
 				for( int j = 0; j<bufferCount; j++){
