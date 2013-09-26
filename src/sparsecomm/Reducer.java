@@ -25,6 +25,11 @@ public class Reducer {
 	int[] kk;
 	int[][] kN;
 	int d;
+
+	
+	// partition boundary
+	int[][] parts;
+	int[] binpos;
 	
 	// configurations
 	private LinkedList<IVec> scheduleVertexSets;
@@ -74,16 +79,36 @@ public class Reducer {
 			if(kk[i]>maxk){ maxk = kk[i]; }
 		}
 		
+		// neighbours at different level
+		// partition boundaries at different level
 		kN = new int[d][maxk];
-		for(int i=0; i<d; i++){
-			int intv = 1;
-			for(int j=0; j<kk[i]; j++){
-				int pos = (rank + intv*j) % (intv*kk[i]);
-				intv = intv*kk[i];
+		parts = new int[d][maxk+1];
+		binpos = new int[d];
+		int minV = 0;
+		int maxV = modelSize - 1;
+		int bin = -1;
+
+		int intv = size;
+		for(int l=0; l<d; l++){
+			
+			intv = intv/kk[l];
+			bin = rank/intv % kk[l];
+			binpos[l] = bin;
+			
+			for(int i=0; i<kk[l]; i++){
 				
-				int init = (rank/intv)*intv;
-				kN[i][j] = init + pos;
+				int pos = (rank + intv*i) % (intv*kk[l]);
+				int init = bin * intv;
+				kN[l][i] = init + pos;
+				
+				int N = maxV - minV + 1;
+				parts[l][i] = minV + N/kk[l];
 			}
+			parts[l][kk[l]] = maxV+1;
+			
+			minV = parts[l-1][bin];
+			maxV = parts[l-1][bin+1] - 1;
+			
 		}
 	}
 	
@@ -93,18 +118,7 @@ public class Reducer {
 		maps = new LinkedList<IVec>();
 	}
 	
-	/*
-	public int getRight( int i, int level){
-		int intv = (int) Math.pow(k, level);
-		int pos = (rank + intv*i) % (k * intv);
-		int init = ((rank) / (k * intv))*(k * intv);
-		return init + pos;
-	}
-	
-	public int getLeft( int i, int level){
-		return getRight( kk[level] - i, level);
-	}*/
-	
+
 	public int getScatterOriginIndex(int i, int level){
 		// offset level
 		int kl = 0;
@@ -149,46 +163,7 @@ public class Reducer {
 		return offset + (kk[level]-i)%kk[level];
 	}
 	
-	public int getHost( int vid ){
-		int hostSize = (modelSize+size-1)/size;
-		return vid/hostSize;
-	}
 	
-	// scatter destination at level "level" for vertex hosted by "host"
-	// return -1 if don't need to scatter
-	public int getScatterDest( int host, int level){
-		
-		for( int dest = 0; dest < k; dest ++){
-			int right = getRight(dest, level);
-			if((right % (int)Math.pow(k, level+1)) == (host % (int)Math.pow(k, level+1))){
-				return dest;
-			}
-		}
-		return -1;
-	}
-	
-	// need to change
-	/*
-	public int getGatherDest( int host, int level){
-		
-		for( int dest = 0; dest < k; dest ++){
-			int right = getRight(dest, level);
-			if((right / (int)Math.pow(k, level)) == (host / (int)Math.pow(k, level))){
-				return dest;
-			}
-		}
-		return -1;
-	}*/
-	public int getGatherDest( int host, int level){
-		
-		for( int dest = 0; dest < k; dest ++){
-			int right = getRight(dest, level);
-			if((right % (int)Math.pow(k, level+1)) == (host % (int)Math.pow(k, level+1))){
-				return dest;
-			}
-		}
-		return -1;
-	}
 	
 	public void makeScatterSendBuffer( float[] sendBuffer, int[] sendCounts, int[] sendDispls, int level){
 		
@@ -242,12 +217,21 @@ public class Reducer {
 		// sorting according to host rank
 		// Arrays.sort(outboundIndices);
 		int[] outboundIndices = scatterVertexSet.data;
+		
+		int[] parts = new int[kk[level]+1];
+		
 
 		long sTime = System.nanoTime();
 		for( int i = 0; i < outboundIndices.length; i++ ){
-			int host = getHost(outboundIndices[i]);
-			int dest = getScatterDest(host, level);
+			//int host = getHost(outboundIndices[i]);
+			//int dest = getScatterDest(host, level);
 			//System.out.println(String.format("rank: %d, host: %d, level: %d dest: %d", rank, host, level, dest));
+			int dest = -1;
+			for(int j = 0; j<kk[level]; j++){
+				if(outboundIndices[i]>=parts[j] && outboundIndices[i]<parts[j+1]){
+					dest = (j + kk[level] - binpos[level]) % kk[level];
+				}
+			}
 			if(dest >= 0){sendCounts[dest] += 1;}
 		}
 		
@@ -260,8 +244,8 @@ public class Reducer {
 		int[] pointers = new int[kk[level]];
 		
 		for( int i = 0; i < outboundIndices.length; i++ ){
-			int host = getHost(outboundIndices[i]);
-			int dest = getScatterDest(host, level);
+			//int host = getHost(outboundIndices[i]);
+			//int dest = getScatterDest(host, level);
 			if(dest >=0 ){
 				sendBuffer[sendDispls[dest] + pointers[dest]] = outboundIndices[i]; 			   
 				pointers[dest] += 1;
@@ -291,8 +275,8 @@ public class Reducer {
 		long sTime = System.nanoTime();
 		
 		for( int i = 0; i < inboundIndices.length; i++ ){
-			int host = getHost(inboundIndices[i]);
-			int dest = getGatherDest(host, level);
+			//int host = getHost(inboundIndices[i]);
+			//int dest = getGatherDest(host, level);
 			if(dest >= 0){sendCounts[dest] += 1;}
 		}
 		
@@ -305,8 +289,8 @@ public class Reducer {
 		int[] pointers = new int[kk[level]];
 		
 		for( int i = 0; i < inboundIndices.length; i++ ){
-			int host = getHost(inboundIndices[i]);
-			int dest = getGatherDest(host, level);
+			//int host = getHost(inboundIndices[i]);
+			//int dest = getGatherDest(host, level);
 			if(dest >= 0){
 				sendBuffer[sendDispls[dest] + pointers[dest]] = inboundIndices[i]; 
 				pointers[dest] += 1;
