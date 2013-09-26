@@ -334,7 +334,7 @@ public class Reducer {
 		int [] sendCounts;
 		int [] sendDispls;
 		
-		MPI.COMM_WORLD.Barrier();
+		//MPI.COMM_WORLD.Barrier();
 		//System.out.println("scatter config");
 		for( int l = 0; l < d; l++){
 			
@@ -401,7 +401,7 @@ public class Reducer {
 		packingTime = 0;
 		barrierTime = 0;
 		
-		MPI.COMM_WORLD.Barrier();
+		//MPI.COMM_WORLD.Barrier();
 		// get map for outbound vertices
 		int kd = 0;
 		for( int j=0; j<d; j++){kd += kk[j];}
@@ -559,7 +559,7 @@ public class Reducer {
 				MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.FLOAT, right, 0, buffer, 0, bufferCount, MPI.FLOAT, left, 0);
 				long eTime = System.nanoTime();
 				realCommTime += eTime - sTime;
-				System.out.println(String.format("scatter source: %d, dest: %d, level: %d, time: %f", rank, right, level, (eTime-sTime)/1000000000f));
+				System.out.println(String.format("scatter source: %d, dest: %d, level: %d, time: %f, size: %d", rank, right, level, (eTime-sTime)/1000000000f, sendCounts[i]));
 	
 				for(int j = 0; j<bufferCount; j++){
 					internalBuffer[map[j]] += buffer[j];
@@ -595,7 +595,7 @@ public class Reducer {
 				MPI.COMM_WORLD.Sendrecv(sendBuffer, sendDispls[i], sendCounts[i], MPI.FLOAT, right, 0, recvBuffer, 0, bufferCount, MPI.FLOAT, left, 0);
 				long eTime = System.nanoTime();
 				realCommTime += eTime - sTime;
-				System.out.println(String.format("gather source: %d, dest: %d, level: %d, time: %f", rank, right, level, (eTime-sTime)/1000000000f));
+				System.out.println(String.format("gather source: %d, dest: %d, level: %d, time: %f, size: %d", rank, right, level, (eTime-sTime)/1000000000f, sendCounts[i]));
 				//System.out.println(eTime-sTime);
 				
 				for( int j = 0; j<bufferCount; j++){
