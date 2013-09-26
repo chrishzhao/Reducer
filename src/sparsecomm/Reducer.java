@@ -75,7 +75,7 @@ public class Reducer {
 		
 		int maxk = 0;
 		for(int i=0; i<d; i++){
-			kk[i] = Integer.parseInt(args[1+d]);
+			kk[i] = Integer.parseInt(args[1+i]);
 			if(kk[i]>maxk){ maxk = kk[i]; }
 		}
 		
@@ -98,16 +98,16 @@ public class Reducer {
 			for(int i=0; i<kk[l]; i++){
 				
 				int pos = (rank + intv*i) % (intv*kk[l]);
-				int init = bin * intv;
+				int init = rank/(intv*kk[l])*(intv*kk[l]);
 				kN[l][i] = init + pos;
 				
 				int N = maxV - minV + 1;
-				parts[l][i] = minV + N/kk[l];
+				parts[l][i] = minV + i*N/kk[l];
 			}
 			parts[l][kk[l]] = maxV+1;
 			
-			minV = parts[l-1][bin];
-			maxV = parts[l-1][bin+1] - 1;
+			minV = parts[l][bin];
+			maxV = parts[l][bin+1] - 1;
 			
 		}
 	}
@@ -218,8 +218,6 @@ public class Reducer {
 		// Arrays.sort(outboundIndices);
 		int[] outboundIndices = scatterVertexSet.data;
 		
-		int[] parts = new int[kk[level]+1];
-		
 
 		long sTime = System.nanoTime();
 		for( int i = 0; i < outboundIndices.length; i++ ){
@@ -228,7 +226,7 @@ public class Reducer {
 			//System.out.println(String.format("rank: %d, host: %d, level: %d dest: %d", rank, host, level, dest));
 			int dest = -1;
 			for(int j = 0; j<kk[level]; j++){
-				if(outboundIndices[i]>=parts[j] && outboundIndices[i]<parts[j+1]){
+				if(outboundIndices[i]>=parts[level][j] && outboundIndices[i]<parts[level][j+1]){
 					dest = (j + kk[level] - binpos[level]) % kk[level];
 				}
 			}
@@ -246,6 +244,12 @@ public class Reducer {
 		for( int i = 0; i < outboundIndices.length; i++ ){
 			//int host = getHost(outboundIndices[i]);
 			//int dest = getScatterDest(host, level);
+			int dest = -1;
+			for(int j = 0; j<kk[level]; j++){
+				if(outboundIndices[i]>=parts[level][j] && outboundIndices[i]<parts[level][j+1]){
+					dest = (j + kk[level] - binpos[level]) % kk[level];
+				}
+			}
 			if(dest >=0 ){
 				sendBuffer[sendDispls[dest] + pointers[dest]] = outboundIndices[i]; 			   
 				pointers[dest] += 1;
@@ -277,6 +281,12 @@ public class Reducer {
 		for( int i = 0; i < inboundIndices.length; i++ ){
 			//int host = getHost(inboundIndices[i]);
 			//int dest = getGatherDest(host, level);
+			int dest = -1;
+			for(int j = 0; j<kk[level]; j++){
+				if(inboundIndices[i]>=parts[level][j] && inboundIndices[i]<parts[level][j+1]){
+					dest = (j + kk[level] - binpos[level]) % kk[level];
+				}
+			}
 			if(dest >= 0){sendCounts[dest] += 1;}
 		}
 		
@@ -291,6 +301,12 @@ public class Reducer {
 		for( int i = 0; i < inboundIndices.length; i++ ){
 			//int host = getHost(inboundIndices[i]);
 			//int dest = getGatherDest(host, level);
+			int dest = -1;
+			for(int j = 0; j<kk[level]; j++){
+				if(inboundIndices[i]>=parts[level][j] && inboundIndices[i]<parts[level][j+1]){
+					dest = (j + kk[level] - binpos[level]) % kk[level];
+				}
+			}
 			if(dest >= 0){
 				sendBuffer[sendDispls[dest] + pointers[dest]] = inboundIndices[i]; 
 				pointers[dest] += 1;
@@ -360,7 +376,13 @@ public class Reducer {
 		long sTime = System.nanoTime();
 		scheduleVertexSets.add(new IVec(outboundIndices));
 		scheduleVertexSets.add(new IVec(inboundIndices));
-		maps = IVec.mergeAndMap(scheduleVertexSets);
+		IVec master = IVec.merge(scatterVertexSet, gatherVertexSet);
+		
+		maps.add(master);
+		for (IVec iv : scheduleVertexSets) {
+			maps.add(IVec.mapInds(iv, master));
+		}	
+		
 		internalBuffer = new float[maps.get(0).size()];
 		long eTime = System.nanoTime();
 		configMergeTime += eTime - sTime;
